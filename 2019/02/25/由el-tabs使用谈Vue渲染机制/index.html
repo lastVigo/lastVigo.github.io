@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lastvigo.github.io","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="从elementUI的使用经历，谈vue渲染机制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="由el-tabs使用谈Vue渲染机制">
+<meta property="og:url" content="https://lastvigo.github.io/2019/02/25/%E7%94%B1el-tabs%E4%BD%BF%E7%94%A8%E8%B0%88Vue%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/index.html">
+<meta property="og:site_name" content="Vigo&#39;s Blog">
+<meta property="og:description" content="从elementUI的使用经历，谈vue渲染机制">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-02-25T06:32:17.000Z">
+<meta property="article:modified_time" content="2020-03-17T02:04:47.704Z">
+<meta property="article:author" content="Vigo">
+<meta property="article:tag" content="vue">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lastvigo.github.io/2019/02/25/%E7%94%B1el-tabs%E4%BD%BF%E7%94%A8%E8%B0%88Vue%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>由el-tabs使用谈Vue渲染机制 | Vigo's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Vigo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lastvigo.github.io/2019/02/25/%E7%94%B1el-tabs%E4%BD%BF%E7%94%A8%E8%B0%88Vue%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Vigo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vigo's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          由el-tabs使用谈Vue渲染机制
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-02-25 14:32:17" itemprop="dateCreated datePublished" datetime="2019-02-25T14:32:17+08:00">2019-02-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-17 10:04:47" itemprop="dateModified" datetime="2020-03-17T10:04:47+08:00">2020-03-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">从elementUI的使用经历，谈vue渲染机制</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>el-tabs是elementUI（基于Vue）的一个组件，实现的是标签页的功能。具体使用方法就不赘述了。文档在<a href="http://element-cn.eleme.io/#/zh-CN/component/tabs#tabs-biao-qian-ye" target="_blank" rel="noopener">这里</a>。</p>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>有这样一个使用场景：用户点击一个标签页后，需要判断是否可以进行切换，如果检查通过，那么就不做干预；否则，需要把标签页重置回用户操作前的。</p>
+<h1 id="尝试"><a href="#尝试" class="headerlink" title="尝试"></a>尝试</h1><p>通过前面的文档可以知道，这个组件绑定了一个数值，这个数值指向的是当前标签页的名字（每个标签页都有的一个名字）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;el-tabs v-model&#x3D;&quot;activeName&quot; @tab-click&#x3D;&quot;handleClick&quot;&gt;</span><br><span class="line">    &lt;el-tab-pane label&#x3D;&quot;用户管理&quot; name&#x3D;&quot;first&quot;&gt;用户管理&lt;&#x2F;el-tab-pane&gt;</span><br><span class="line">    &lt;el-tab-pane label&#x3D;&quot;配置管理&quot; name&#x3D;&quot;second&quot;&gt;配置管理&lt;&#x2F;el-tab-pane&gt;</span><br><span class="line">    &lt;el-tab-pane label&#x3D;&quot;角色管理&quot; name&#x3D;&quot;third&quot;&gt;角色管理&lt;&#x2F;el-tab-pane&gt;</span><br><span class="line">    &lt;el-tab-pane label&#x3D;&quot;定时任务补偿&quot; name&#x3D;&quot;fourth&quot;&gt;定时任务补偿&lt;&#x2F;el-tab-pane&gt;</span><br><span class="line">  &lt;&#x2F;el-tabs&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">  export default &#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">      return &#123;</span><br><span class="line">        activeName: &#39;second&#39;</span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">    methods: &#123;</span><br><span class="line">      handleClick(tab, event) &#123;</span><br><span class="line">        if(tab.name&#x3D;&#x3D;&#39;second&#39;)&#123;&#x2F;&#x2F; 切换目标是第二个标签页</span><br><span class="line">            if(true)&#123;&#x2F;&#x2F; 这里模拟数据检查需要干预</span><br><span class="line">                this.activeName &#x3D; &quot;first&quot;;&#x2F;&#x2F; 强制切换到第一个标签页面（没有效果）</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+<p>以上，<strong>activeName</strong>是当前显示的标签名称，它的值从<strong>first</strong>、<strong>second</strong>以及<strong>third</strong>中取得。通常我们切换标签页只需要修改<strong>activeName</strong>的值就好了。就像上面代码中的<code>this.activeName = &quot;first&quot;</code>。但是实际却没有任何效果。</p>
+<h1 id="问题追踪"><a href="#问题追踪" class="headerlink" title="问题追踪"></a>问题追踪</h1><p>上面的代码在执行完毕后，通过调试工具发现<strong>activeName</strong>的值在强制赋值已经改变了。强制赋值后它的值是预期的，但标签页内容没有更新。另外还发现，此时无法再通过编程方式切换到第一个标签（<code>this.activeName = &quot;first&quot;</code>失效）。</p>
+<h1 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h1><p>这个组件基于vue编写，修改绑定的标签名称就可以达到切换标签页的功能，实现逻辑应该也是监听到数据变化再做渲染。以上情况出现的原因可能是更改值（为second）之后，DOM尚未来得及刷新，此时又做了一次赋值，架构认为已经新值已经刷新完毕。故出现了数据和显示不一致的情况。Vue<a href="https://cn.vuejs.org/v2/guide/reactivity.html#%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%98%9F%E5%88%97" target="_blank" rel="noopener">官方文档</a>：</p>
+<blockquote>
+<p>可能你还没有注意到，Vue 异步执行 DOM 更新。只要观察到数据变化，Vue 将开启一个队列，并缓冲在同一事件循环中发生的所有数据改变。如果同一个 watcher 被多次触发，只会被推入到队列中一次。这种在缓冲时去除重复数据对于避免不必要的计算和 DOM 操作上非常重要。然后，在下一个的事件循环“tick”中，Vue 刷新队列并执行实际 (已去重的) 工作。Vue 在内部尝试对异步队列使用原生的 Promise.then 和 MessageChannel，如果执行环境不支持，会采用 setTimeout(fn, 0) 代替。</p>
+</blockquote>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>经过以上分析，强制赋值应该在前次赋值而且DOM已经刷新完毕之后进行。可以使用<a href="https://cn.vuejs.org/v2/api/#vm-nextTick" target="_blank" rel="noopener">$nextTick</a>，以下是代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">this.$nextTick(()&#x3D;&gt; &#123;</span><br><span class="line">    this.activeName &#x3D; &quot;first&quot;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>原理是：</p>
+<blockquote>
+<p>将回调延迟到下次 DOM 更新循环之后执行。在修改数据之后立即使用它，然后等待 DOM 更新。它跟全局方法 Vue.nextTick 一样，不同的是回调的 this 自动绑定到调用它的实例上。</p>
+</blockquote>
+<h1 id="深入"><a href="#深入" class="headerlink" title="深入"></a>深入</h1><p>阅读elementUI源码后（<a href="https://github.com/ElemeFE/element" target="_blank" rel="noopener">GitHub地址</a>），tabs.vue抛出tab-click事件的方法是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">handleTabClick(tab, tabName, event) &#123;</span><br><span class="line">    if (tab.disabled) return;</span><br><span class="line">    this.setCurrentName(tabName);</span><br><span class="line">    this.$emit(&#39;tab-click&#39;, tab, event);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>在抛出事件之前似乎setCurrentName是做了赋值操作，具体如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">setCurrentName(value) &#123;</span><br><span class="line">    const changeCurrentName &#x3D; () &#x3D;&gt; &#123;</span><br><span class="line">      this.currentName &#x3D; value;</span><br><span class="line">      this.$emit(&#39;input&#39;, value);</span><br><span class="line">    &#125;;</span><br><span class="line">    if (this.currentName !&#x3D;&#x3D; value &amp;&amp; this.beforeLeave) &#123;</span><br><span class="line">      const before &#x3D; this.beforeLeave(value, this.currentName);</span><br><span class="line">      if (before &amp;&amp; before.then) &#123;</span><br><span class="line">        before.then(() &#x3D;&gt; &#123;</span><br><span class="line">          changeCurrentName();</span><br><span class="line"></span><br><span class="line">          this.$refs.nav &amp;&amp; this.$refs.nav.removeFocus();</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125; else if (before !&#x3D;&#x3D; false) &#123;</span><br><span class="line">        changeCurrentName();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      changeCurrentName();</span><br><span class="line">    &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意这里的<strong>beforeLeave</strong>，根据以上代码可见：可以在赋值前执行一个回调方法，我们上面的需求可以通过这个设置回调的方式实现，这种方式避免了无谓的渲染，是最好的实现方式。<br>这里currentName只是简单的属性，但其上加了侦听：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if (this.$refs.nav) &#123;</span><br><span class="line">    this.$nextTick(() &#x3D;&gt; &#123;</span><br><span class="line">        this.$refs.nav.$nextTick(_ &#x3D;&gt; &#123;</span><br><span class="line">          this.$refs.nav.scrollToActiveTab();</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里很明显是在下一个渲染周期才会调用组件进行更新，再进一步查看scrollToActiveTab方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">scrollToActiveTab() &#123;</span><br><span class="line">    if (!this.scrollable) return;</span><br><span class="line">    const nav &#x3D; this.$refs.nav;</span><br><span class="line">    const activeTab &#x3D; this.$el.querySelector(&#39;.is-active&#39;);</span><br><span class="line">    if (!activeTab) return;</span><br><span class="line">    const navScroll &#x3D; this.$refs.navScroll;</span><br><span class="line">    const activeTabBounding &#x3D; activeTab.getBoundingClientRect();</span><br><span class="line">    const navScrollBounding &#x3D; navScroll.getBoundingClientRect();</span><br><span class="line">    const maxOffset &#x3D; nav.offsetWidth - navScrollBounding.width;</span><br><span class="line">    const currentOffset &#x3D; this.navOffset;</span><br><span class="line">    let newOffset &#x3D; currentOffset;</span><br><span class="line"></span><br><span class="line">    if (activeTabBounding.left &lt; navScrollBounding.left) &#123;</span><br><span class="line">      newOffset &#x3D; currentOffset - (navScrollBounding.left - activeTabBounding.left);</span><br><span class="line">    &#125;</span><br><span class="line">    if (activeTabBounding.right &gt; navScrollBounding.right) &#123;</span><br><span class="line">      newOffset &#x3D; currentOffset + activeTabBounding.right - navScrollBounding.right;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    newOffset &#x3D; Math.max(newOffset, 0);</span><br><span class="line">    this.navOffset &#x3D; Math.min(newOffset, maxOffset);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>可以发现，以上代码并没有更新标签页的内容，大概是试图更新标签项的显示。</p>
+<p>那么到底是如何影响切换显示内容呢？</p>
+<p>经过进一步阅读查找，在tab-nav.vue的render方法中我们找到了如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class&#x3D;&#123;&#123;</span><br><span class="line">    &#39;el-tabs__item&#39;: true,</span><br><span class="line">    [&#96;is-$&#123; this.rootTabs.tabPosition &#125;&#96;]: true,</span><br><span class="line">    &#39;is-active&#39;: pane.active,</span><br><span class="line">    &#39;is-disabled&#39;: pane.disabled,</span><br><span class="line">    &#39;is-closable&#39;: closable,</span><br><span class="line">    &#39;is-focus&#39;: this.isFocus</span><br><span class="line">&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>这是渲染标签内容显示的片段，<strong>is-active</strong>的值取决于<strong>pane.active</strong>，根据上下文可以获知pane是tab-pane.vue中定义的组件，在其计算属性中这样定义：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">active() &#123;</span><br><span class="line">    const active &#x3D; this.$parent.currentName &#x3D;&#x3D;&#x3D; (this.name || this.index);</span><br><span class="line">    if (active) &#123;</span><br><span class="line">      this.loaded &#x3D; true;</span><br><span class="line">    &#125;</span><br><span class="line">    return active;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里做了值判断，当前标签页是父中的选中标签页，就返回真。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过这个需求实践，巩固了对vue渲染机制的理解。阅读elementUI源代码，是从代码消费者到代码生产者转变的一个重要途径。</p>
+<p><a href="https://codepen.io/lastVigo/pen/JzPJEP" target="_blank" rel="noopener">这里</a>有以上例子的简要示例。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/vue/" rel="tag"># vue</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/02/16/%E7%AE%80%E8%B0%88%E4%B8%AD%E5%9B%BD%E7%8E%B0%E8%A1%8C%E5%8E%86%E6%B3%95/" rel="prev" title="简谈中国现行历法">
+      <i class="fa fa-chevron-left"></i> 简谈中国现行历法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/09/24/Linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E6%97%B6%E9%97%B4%E6%A0%A1%E5%AF%B9%EF%BC%9F/" rel="next" title="Linux服务器如何进行时间校对？">
+      Linux服务器如何进行时间校对？ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#尝试"><span class="nav-number">3.</span> <span class="nav-text">尝试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题追踪"><span class="nav-number">4.</span> <span class="nav-text">问题追踪</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题分析"><span class="nav-number">5.</span> <span class="nav-text">问题分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决"><span class="nav-number">6.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#深入"><span class="nav-number">7.</span> <span class="nav-text">深入</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Vigo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vigo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lastvigo.github.io","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文介绍了在linux环境下，4种校对时间的方式，精度和自动化程度逐渐加强，总有一款适合你。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux服务器如何进行时间校对？">
+<meta property="og:url" content="https://lastvigo.github.io/2019/09/24/Linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E6%97%B6%E9%97%B4%E6%A0%A1%E5%AF%B9%EF%BC%9F/index.html">
+<meta property="og:site_name" content="Vigo&#39;s Blog">
+<meta property="og:description" content="本文介绍了在linux环境下，4种校对时间的方式，精度和自动化程度逐渐加强，总有一款适合你。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ecapitaladvisors.com/wp-content/uploads/crontab-syntax.gif">
+<meta property="article:published_time" content="2019-09-24T13:27:01.000Z">
+<meta property="article:modified_time" content="2019-09-24T14:50:22.834Z">
+<meta property="article:author" content="Vigo">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ecapitaladvisors.com/wp-content/uploads/crontab-syntax.gif">
+
+<link rel="canonical" href="https://lastvigo.github.io/2019/09/24/Linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E6%97%B6%E9%97%B4%E6%A0%A1%E5%AF%B9%EF%BC%9F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>Linux服务器如何进行时间校对？ | Vigo's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Vigo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lastvigo.github.io/2019/09/24/Linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E6%97%B6%E9%97%B4%E6%A0%A1%E5%AF%B9%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Vigo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vigo's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux服务器如何进行时间校对？
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-09-24 21:27:01 / 修改时间：22:50:22" itemprop="dateCreated datePublished" datetime="2019-09-24T21:27:01+08:00">2019-09-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">运维</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">本文介绍了在linux环境下，4种校对时间的方式，精度和自动化程度逐渐加强，总有一款适合你。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>计算机时间不是精确的时间，服务器环境对时间有不同程度的精度要求，需要校验。</p>
+<p>本文以<strong>CentOS release 6.9 (Final)</strong> 为例。</p>
+<h2 id="4种校验方法"><a href="#4种校验方法" class="headerlink" title="4种校验方法"></a>4种校验方法</h2><ul>
+<li>纯手工：手工校验不精确</li>
+<li>半自动：通过工具比照时间服务器进行校验</li>
+<li>全自动：无需人工干预自行进行时间校验</li>
+<li>平滑全自动：全自动校验而且服务器时间连贯不产生跳跃</li>
+</ul>
+<h1 id="详细介绍"><a href="#详细介绍" class="headerlink" title="详细介绍"></a>详细介绍</h1><h2 id="纯手工"><a href="#纯手工" class="headerlink" title="纯手工"></a>纯手工</h2><p>使用date命令，一般系统时间相差不会太多，如果你不严格要求时间精度，这个命令足够了。</p>
+<h2 id="查看所在时区："><a href="#查看所在时区：" class="headerlink" title="查看所在时区："></a>查看所在时区：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">date -R</span><br></pre></td></tr></table></figure>
+<p>得到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Tue, 17 Sep 2019 22:27:56 +0800</span><br></pre></td></tr></table></figure>
+<p>时区一般不会错，不过在改时间之前最好确认时区。</p>
+<h2 id="修改时间"><a href="#修改时间" class="headerlink" title="修改时间"></a>修改时间</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">date -s 21:50:00</span><br></pre></td></tr></table></figure>
+<p>得到响应：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2019年 09月 17日 星期二 21:50:00 CST</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="修改日期"><a href="#修改日期" class="headerlink" title="修改日期"></a>修改日期</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">date -s &quot;20190917 22:04:00&quot;</span><br></pre></td></tr></table></figure>
+
+<p>得到响应：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2019年 09月 17日 星期二 22:04:00 CST</span><br></pre></td></tr></table></figure>
+<p>以上操作简单，但是还有繁琐的日期和时间的设置，接下来看看更方便的。</p>
+<h2 id="半自动"><a href="#半自动" class="headerlink" title="半自动"></a>半自动</h2><p>半自动设置需要额外的工具，这里需要使用命令安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install ntp</span><br></pre></td></tr></table></figure>
+<p>作为小白，可以不管这是个啥，只需要知道这玩意儿装了以后能做什么：可以运行一行命令把机器的日期时间设置完毕。</p>
+<p>做这步之前需要找一台提供标准时间的服务器（NTP服务器），因为是阿里云的服务器，这里用的也是<a href="https://help.aliyun.com/document_detail/92704.html" target="_blank" rel="noopener">他家的</a>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ntpdate -u  ntp5.aliyun.com</span><br></pre></td></tr></table></figure>
+<p>上面命令中，<strong>ntp5.aliyun.com</strong>是一台NTP服务器地址，<strong>-u</strong>参数最好加上，否则容易出问题：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">17 Sep 21:50:16 ntpdate[13689]: the NTP socket is in use, exiting</span><br></pre></td></tr></table></figure>
+<p>正确的响应例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">17 Sep 21:59:47 ntpdate[13697]: step time server 203.107.6.88 offset 545.042721 sec</span><br></pre></td></tr></table></figure>
+
+<h2 id="全自动"><a href="#全自动" class="headerlink" title="全自动"></a>全自动</h2><p>这里说的全自动就是让机器定时执行上面半自动的命令。不得不了解一下<strong>crontab</strong>命令。使用这个命令，你可以指定以何种周期执行想要执行的命令。这里有一张图能直观说明：</p>
+<p><img src="https://ecapitaladvisors.com/wp-content/uploads/crontab-syntax.gif" alt="image"></p>
+<p>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*&#x2F;10 * * * * &#x2F;usr&#x2F;sbin&#x2F;ntpdate -u  ntp5.aliyun.com</span><br></pre></td></tr></table></figure>
+<p>这个命令每隔10分钟和指定的NTP服务器进行一次时间校验。</p>
+<p>以上命令不是在命令行直接调用，而是需要保存在一个文件中，通过<br><strong>crontab</strong>命令去执行其中的内容。</p>
+<p>默认会有一个文件存储当前用户的定时任务信息，通过以下命令查看：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -l</span><br></pre></td></tr></table></figure>
+<p>如果没有任何内容则显示如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">no crontab for root</span><br></pre></td></tr></table></figure>
+
+<p>下面我们把上面定时更新的定时任务添加上：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
+<p>这个命令执行后进入到了vim界面，通过vim命令，把上面的内容粘贴进去就好，保存后退出，再次查看定时任务列表，得到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*&#x2F;10 * * * * &#x2F;usr&#x2F;sbin&#x2F;ntpdate -u  ntp5.aliyun.com</span><br></pre></td></tr></table></figure>
+
+<p>定时任务是否执行了呢？可以进行一下测试，通过date命令设置一个新的时间，偏离标准时间。等待一个定时任务执行周期，这里也就是10分钟，再次查看系统时间。如果时间恢复到标准时间，则定时任务执行了，目标达成。如果测试没通过，可能需要查看一下crond的服务状态，使用命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service crond status</span><br></pre></td></tr></table></figure>
+
+<p>对于不方便简单测试的定时任务可以通过下列命令查看执行情况：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail -f &#x2F;var&#x2F;log&#x2F;cron</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="平滑全自动"><a href="#平滑全自动" class="headerlink" title="平滑全自动"></a>平滑全自动</h2><p>使用ntpd服务，因为没有需求，本人未做尝试，参见最末参考内容。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://linux.vbird.org/linux_server/0440ntp/0440ntp-centos4.php#theory_NTP" target="_blank" rel="noopener">NTP 時間伺服器</a></p>
+<p><a href="https://www.jianshu.com/p/838db0269fd0" target="_blank" rel="noopener">Linux之crontab定时任务</a></p>
+<p><a href="https://www.jianshu.com/p/efed5853bb40" target="_blank" rel="noopener">ntpdate与ntpd两种时间同步方式</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/linux/" rel="tag"># linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/02/25/%E7%94%B1el-tabs%E4%BD%BF%E7%94%A8%E8%B0%88Vue%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/" rel="prev" title="由el-tabs使用谈Vue渲染机制">
+      <i class="fa fa-chevron-left"></i> 由el-tabs使用谈Vue渲染机制
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/10/11/%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%94%9F%E6%88%90%E4%B8%AD%E6%96%87%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" rel="next" title="服务器生成中文文件失败的问题解决">
+      服务器生成中文文件失败的问题解决 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4种校验方法"><span class="nav-number">1.1.</span> <span class="nav-text">4种校验方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#详细介绍"><span class="nav-number">2.</span> <span class="nav-text">详细介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#纯手工"><span class="nav-number">2.1.</span> <span class="nav-text">纯手工</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看所在时区："><span class="nav-number">2.2.</span> <span class="nav-text">查看所在时区：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改时间"><span class="nav-number">2.3.</span> <span class="nav-text">修改时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改日期"><span class="nav-number">2.4.</span> <span class="nav-text">修改日期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#半自动"><span class="nav-number">2.5.</span> <span class="nav-text">半自动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全自动"><span class="nav-number">2.6.</span> <span class="nav-text">全自动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#平滑全自动"><span class="nav-number">2.7.</span> <span class="nav-text">平滑全自动</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Vigo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vigo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
