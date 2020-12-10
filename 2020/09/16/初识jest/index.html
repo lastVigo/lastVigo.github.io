@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lastvigo.github.io","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="构建对jest的初步认识">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jest入门">
+<meta property="og:url" content="https://lastvigo.github.io/2020/09/16/%E5%88%9D%E8%AF%86jest/index.html">
+<meta property="og:site_name" content="Vigo&#39;s Blog">
+<meta property="og:description" content="构建对jest的初步认识">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-09-16T08:50:45.000Z">
+<meta property="article:modified_time" content="2020-09-17T12:30:49.163Z">
+<meta property="article:author" content="Vigo">
+<meta property="article:tag" content="测试">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lastvigo.github.io/2020/09/16/%E5%88%9D%E8%AF%86jest/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>jest入门 | Vigo's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Vigo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lastvigo.github.io/2020/09/16/%E5%88%9D%E8%AF%86jest/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Vigo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vigo's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          jest入门
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-16 16:50:45" itemprop="dateCreated datePublished" datetime="2020-09-16T16:50:45+08:00">2020-09-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-09-17 20:30:49" itemprop="dateModified" datetime="2020-09-17T20:30:49+08:00">2020-09-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">构建对jest的初步认识</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="jest是什么"><a href="#jest是什么" class="headerlink" title="jest是什么"></a>jest是什么</h2><p>进入正题前先讲一个老笑话：</p>
+<blockquote>
+<p>一群软件项目经理参加一个培训。培训老师提了个问题：“假设今天你手头的项目完成了，恰好这个项目的内容是制造一架飞机，那么，你愿意参加首飞吗？愿意的请举手。”<br>台下只有两位举起了手，培训老师把那两位项目经理请上了讲台，然后问他们为什么敢于举手。<br>第一位说：“我们的管理很严格，规范也很全面，我相信我的团队100%完成了任务，我有信心”。全场都向他投去了钦佩羡慕的目光。<br>轮到第二位了，他说：“和他相反，我坚信我们的飞机根本飞不起来，所以我能很放心的参加首飞。”</p>
+</blockquote>
+<p>尽管这是一个笑话，但也说明开发完成完全不能等同于交付生产。其中测试是必不可少的环节。</p>
+<p>说到软件测试，往往想到的是软件测试人员在软件开发完成后，对软件产品的测试。其实在开发阶段，开发人员就可以进行单元测试和集成测试了。</p>
+<p>单元测试和集成测试，可以把代码缺陷消灭在萌芽阶段，避免存在问题的代码进入后面的环节，降低成本。</p>
+<p>jest就是可以用于这两方面的JavaScript测试框架，Facebook出品。</p>
+<p>jest拥有比较全面的断言库， 支持同步异步代码测试，能提供测试覆盖率报告，对于某些不便直接测试的功能，还可以提供Mock支持。</p>
+<h2 id="jset如何使用"><a href="#jset如何使用" class="headerlink" title="jset如何使用"></a>jset如何使用</h2><p>因为<code>jset</code>是一个<code>npm</code>包，这里按照通常情形：在自己的<code>npm</code>项目中使用<code>jset</code>。其他使用情形不讨论。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>使用<code>npm</code>或者<code>yarn</code>安装jset包即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add --dev jest</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev jest</span><br></pre></td></tr></table></figure>
+
+<p>官方推荐使用<code>yarn</code>。</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><h4 id="定制生成jest配置文件"><a href="#定制生成jest配置文件" class="headerlink" title="定制生成jest配置文件"></a>定制生成jest配置文件</h4><p>运行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx jest --init</span><br></pre></td></tr></table></figure>
+
+<p>命令运行后，会有一系列问答，根据需求设置就好。完成后会在项目目录中生成名为<code>jest.conifg.js</code>的文件，它是一个<code>node</code>模块，定义了<code>jest</code>的配置信息，具体内容在文件中有注释，可以查看。</p>
+<h4 id="配置自定义npm命令"><a href="#配置自定义npm命令" class="headerlink" title="配置自定义npm命令"></a>配置自定义npm命令</h4><p>为了方便调用jest命令，在<code>package.json</code>文件中添加如下的命令脚本：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;test&quot;: &quot;jest&quot;,</span><br><span class="line">    &quot;coverage&quot;:&quot;jest --coverage&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配置完成后，运行<code>npm run test</code>就可以进行<code>jset</code>测试，运行 <code>npm run converage</code>就可以进行<code>jset</code>测试同时生成测试报告。</p>
+<p>如果想一边写测试代码，一边看结果，不妨做如下设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;test&quot;: &quot;jest ----watchAll&quot;,</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>运行这个命令后jest测试完成后，不会返回终端，而是等待测试文件的修改，一旦发现测试文件修改，就立即执行测试。</p>
+<h4 id="配置支持ES6语法"><a href="#配置支持ES6语法" class="headerlink" title="配置支持ES6语法"></a>配置支持ES6语法</h4><p>jset并不天然支持ES6，所以需要使用babel进行转换，详见<a href="https://jestjs.io/docs/zh-Hans/getting-started#%E4%BD%BF%E7%94%A8-babel" target="_blank" rel="noopener">文档</a>。其中也能找到支持TypeScript的配置方法。</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>根据官方文档，可以把jest和webpack结合使用，作为入门文章这里只讲使用前面配置好的<code>npm run test</code>和<code>npm run converage</code>命令执行测试代码的情形。</p>
+<h2 id="jest测试代码编写"><a href="#jest测试代码编写" class="headerlink" title="jest测试代码编写"></a>jest测试代码编写</h2><h3 id="测试文件命名"><a href="#测试文件命名" class="headerlink" title="测试文件命名"></a>测试文件命名</h3><p>jest测试代码也是js文件，只需要以<code>xxx.test.js</code>这样的格式命名即可。不是以此格式命名的文件会被忽略。</p>
+<h3 id="相关语句语法"><a href="#相关语句语法" class="headerlink" title="相关语句语法"></a>相关语句语法</h3><ul>
+<li><p><code>expect</code>语句能够将值和匹配器做比较，从而测试程序是否符合预期；</p>
+</li>
+<li><p><code>test</code>（别名是<code>it</code>）语句包裹一个测试；</p>
+</li>
+<li><p><code>describe</code>语句包裹一系列相关测试；</p>
+</li>
+</ul>
+<h3 id="测试文件组织"><a href="#测试文件组织" class="headerlink" title="测试文件组织"></a>测试文件组织</h3><ul>
+<li><p>一个文件可以由一个或者多个<code>describe</code>语句组成，用来测试一组或者多组测试，如果已经通过测试文件分离了多组测试，那么可以没有<code>describe</code>语句；</p>
+</li>
+<li><p>一个<code>describe</code>语句通常会包含一个或者多<code>个test</code>语句，<code>describe</code>还支持嵌套；</p>
+</li>
+<li><p>一个<code>test</code>语句通常也会包含一个或者多个<code>expect</code>语句</p>
+</li>
+</ul>
+<h3 id="测试文件样例"><a href="#测试文件样例" class="headerlink" title="测试文件样例"></a>测试文件样例</h3><p>这样下来，一个测试文件大概长成这个样子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">describe(&#39;Test String&#39;, () &#x3D;&gt; &#123;</span><br><span class="line"></span><br><span class="line">    test(&#39;equal&#39;, () &#x3D;&gt; &#123;</span><br><span class="line">        expect(&#39;123).toBe(&#39;123&#39;)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    test(&#39;contain&#39;, () &#x3D;&gt; &#123;</span><br><span class="line">        expect(&#39;123&#39;).toMatch(&#39;12&#39;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line">describe(&#39;Test Number&#39;, () &#x3D;&gt; &#123;</span><br><span class="line"></span><br><span class="line">    test(&#39;equal&#39;, () &#x3D;&gt; &#123;</span><br><span class="line">        expect(123).toBe(123)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    test(&#39;less&#39;, () &#x3D;&gt; &#123;</span><br><span class="line">        expect(123).toBeLessThan(124)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    test(&#39;less or equal :1&#39;, () &#x3D;&gt; &#123;</span><br><span class="line">        expect(123).toBeLessThanOrEqual(123)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    test(&#39;less or equal :2&#39;, () &#x3D;&gt; &#123;</span><br><span class="line">        expect(123).toBeLessThanOrEqual(124)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    test(&#39;greate&#39;, () &#x3D;&gt; &#123;</span><br><span class="line">        expect(123).toBeGreaterThan(122)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    test(&#39;great or equal :1&#39;, () &#x3D;&gt; &#123;</span><br><span class="line">        expect(123).toBeGreaterThanOrEqual(123)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    test(&#39;less or equal :2&#39;, () &#x3D;&gt; &#123;</span><br><span class="line">        expect(123).toBeGreaterThanOrEqual(122)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 解决计算精度不准的问题</span><br><span class="line">    test(&#39;plus&#39;, () &#x3D;&gt; &#123;</span><br><span class="line">        expect(123 + 0.3 + 0.1).toBeCloseTo(123.4)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>PS：<br>以上例子中，<code>expect</code>语句中都直接给定了值，实际情况肯定不是如此，应该在测试文件中引用相关文件的相关方法，调用得到值，然后再和匹配器做比较。</p>
+<h2 id="匹配器"><a href="#匹配器" class="headerlink" title="匹配器"></a>匹配器</h2><p>jest有一大堆让人眼花缭乱的匹配器，他们都在<a href="https://jestjs.io/docs/zh-Hans/expect#%E6%96%B9%E6%B3%95" target="_blank" rel="noopener">这里</a>，有些让人生畏，但同时也是好事，找到合适的直接拿来用就行了。</p>
+<h3 id="常用匹配器"><a href="#常用匹配器" class="headerlink" title="常用匹配器"></a>常用匹配器</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>等价方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>toBe</td>
+<td></td>
+<td>对于基本类型，比较值（Object.is）；对于引用类型比较是否为同一个引用</td>
+</tr>
+<tr>
+<td>toEqual</td>
+<td></td>
+<td>对于引用类型，深度（递归）比较，基本类型比较值（Object.is）</td>
+</tr>
+<tr>
+<td>toBeDefined</td>
+<td>something!=undefined</td>
+<td>检查变量已经定义</td>
+</tr>
+<tr>
+<td>toBeFalsy</td>
+<td></td>
+<td>检查内容是否为<code>false</code>, <code>0</code>, <code>&#39;&#39;</code>, <code>null</code>, <code>undefined</code>, 或者 <code>NaN</code></td>
+</tr>
+<tr>
+<td>toBeGreaterThan</td>
+<td>&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>toBeGreaterThanOrEqual</td>
+<td>&gt;=</td>
+<td></td>
+</tr>
+<tr>
+<td>toBeLessThan</td>
+<td>&lt;</td>
+<td></td>
+</tr>
+<tr>
+<td>toBeLessThanOrEqual</td>
+<td>&lt;=</td>
+<td></td>
+</tr>
+<tr>
+<td>toBeNull</td>
+<td></td>
+<td>检查预期值是null</td>
+</tr>
+<tr>
+<td>toBeTruthy</td>
+<td></td>
+<td>和toBeFalsy相反</td>
+</tr>
+<tr>
+<td>toBeUndefined</td>
+<td></td>
+<td>检查预期值是undefined</td>
+</tr>
+<tr>
+<td>toBeNaN</td>
+<td></td>
+<td>检查预期值是NaN</td>
+</tr>
+<tr>
+<td>toContain</td>
+<td></td>
+<td>内容是否在<strong>数组中</strong>（===）；<strong>字符串</strong>是否包含在另一个字符串中</td>
+</tr>
+<tr>
+<td>toContainEqual</td>
+<td></td>
+<td>检查内容是否在<strong>数组中</strong>，会进行递归深度比较</td>
+</tr>
+<tr>
+<td>toMatch</td>
+<td></td>
+<td>检查<strong>字符串</strong>是否符合特定规则</td>
+</tr>
+<tr>
+<td>toMatchObject</td>
+<td></td>
+<td>检查<strong>对象</strong>是否符合部分给定的特征</td>
+</tr>
+<tr>
+<td>toStrictEqual</td>
+<td></td>
+<td>比较内容和特定的结构是否相符；可以比较<strong>对象</strong>、<strong>数组</strong>、class实例和字面量对象，即使有相同的属性名称和值，也不能通过</td>
+</tr>
+<tr>
+<td>toThrow(error?)</td>
+<td></td>
+<td>检查抛出了异常</td>
+</tr>
+</tbody></table>
+<h2 id="异步测试"><a href="#异步测试" class="headerlink" title="异步测试"></a>异步测试</h2><p>异步代码是JavaScript中常有的，异步测试和同步测试有很大的的区别，需要特别注意。</p>
+<p>实现异步编程，通常有采用回调方法、<code>Promise</code>和<code>async</code>/<code>await</code>三类，下面分别介绍这三种情况的测试。另外异步方法也可能抛出异常，我们也会介绍具体的测试方法。</p>
+<h3 id="测试回调方法"><a href="#测试回调方法" class="headerlink" title="测试回调方法"></a>测试回调方法</h3><p>在测试的回调方法中<strong>一定</strong>要调用<code>done</code>方法。</p>
+<p><code>done</code>方法是jest自身提供的，需要在回调方法中的各种情况下都调用一次，这样在<code>done</code>之前的测试代码才会执行。比如如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">test(&#39;在回调方法中调用done，保证回调方法被执行，结果被验证&#39;, (done) &#x3D;&gt; &#123;</span><br><span class="line">    function calback(e, data) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            console.log(&#39;callback测试2&#39;)</span><br><span class="line">            expect(data).toMatchObject(&#123;</span><br><span class="line">                code: &#39;200&#39;</span><br><span class="line">            &#125;)</span><br><span class="line">            done()</span><br><span class="line">        &#125; catch (error) &#123;</span><br><span class="line">            done(error)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    doAsync(calback)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试promise"><a href="#测试promise" class="headerlink" title="测试promise"></a>测试promise</h3><h4 id="记得要return"><a href="#记得要return" class="headerlink" title="记得要return"></a>记得要<code>return</code></h4><p><code>test</code>中的测试方法一定要返回promise，否则测试代码无法执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">test(&#39;promise 测试，正确例子，一定要返回&#39;, () &#x3D;&gt; &#123;</span><br><span class="line">    return getBjWeatherReport().then((response) &#x3D;&gt; &#123;</span><br><span class="line">        expect(response.data).toMatchObject(&#123;</span><br><span class="line">            code: &#39;200&#39;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="采用expect-assertions-测试异常"><a href="#采用expect-assertions-测试异常" class="headerlink" title="采用expect.assertions() 测试异常"></a>采用<code>expect.assertions()</code> 测试异常</h4><p>如果直接在primise对象的<code>catch</code>方法中测试，会漏掉测试方法正常执行没有被<code>catch</code>捕获的情况。所以需要在测试代码之前断言<code>expect</code>至少被执行一次：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">test(&#39;promise测试，测试异常情况，正确例子&#39;,()&#x3D;&gt;&#123;</span><br><span class="line">    &#x2F;&#x2F; 断言 expcet至少要执行一次</span><br><span class="line">    expect.assertions(1)</span><br><span class="line">    return get404().catch(error&#x3D;&gt;&#123;</span><br><span class="line">        expect(error.toString().indexOf(&#39;Error&#39;)&gt;-1).toBe(true)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+<p>如果一个test只有一个测试内容，也可以使用 <code>expect.hasAssertions()</code>。</p>
+<h4 id="resolves-rejects"><a href="#resolves-rejects" class="headerlink" title=".resolves/.rejects"></a>.resolves/.rejects</h4><p>可以使用.<code>resolves</code>/.<code>rejects</code>指定测试<code>promise</code>的返回结果。参见<a href="https://jestjs.io/docs/en/asynchronous#resolves--rejects" target="_blank" rel="noopener">文档</a></p>
+<h3 id="Async-Await"><a href="#Async-Await" class="headerlink" title="Async/Await"></a>Async/Await</h3><p>测试代码需要声明为<code>async</code>方法，方法体内使用<code>await</code>等待返回。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">test(&#39;async await&#39;,async ()&#x3D;&gt;&#123;</span><br><span class="line">    let respones &#x3D; await getBjWeatherReport()</span><br><span class="line">    expect(respones.data).toMatchObject(&#123;</span><br><span class="line">        code: &#39;200&#39;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>也可以进一步和<code>.resolves</code>/<code>.rejects</code>组合。</p>
+<h2 id="钩子函数"><a href="#钩子函数" class="headerlink" title="钩子函数"></a>钩子函数</h2><ul>
+<li>beforeAll</li>
+<li>afterAll</li>
+<li>beforeEach</li>
+<li>afterEach</li>
+</ul>
+<p>分别在所欲测试开始前/后执行，每一项测试开始前/后执行。可以在这些钩子函数中做测试前的准备，测试后的善后。</p>
+<h2 id="测试分组和钩子函数"><a href="#测试分组和钩子函数" class="headerlink" title="测试分组和钩子函数"></a>测试分组和钩子函数</h2><p>测试分组和钩子函数可以结合使用。</p>
+<ul>
+<li>在外面定义的钩子函数对内层有效</li>
+<li>层内定义的钩子函数支队本层以及子层有效。</li>
+<li>外层的<code>before*</code>钩子先执行</li>
+<li><code>beforeAll</code>先于<code>beforeEach</code>执行</li>
+<li>外层的<code>after*</code>钩子后执行</li>
+<li><code>afterEach</code>先于<code>afterAll</code>执行</li>
+</ul>
+<p>开始：先执行外层<code>beforeAll</code>，后执行内层<code>beforeAll</code> ，直至没有内层</p>
+<p>开始执行一条测试：先执行外层<code>beforeEach</code>，后执行内层<code>beforeEach</code>，直至没有内层；</p>
+<p>一条测试执行完成：先执行内层<code>afterEach</code>，后执行外层<code>afterEach</code>，直至没有外层；     </p>
+<p>结束：先执行内层<code>afterAll</code>，后执行外层<code>afterAll</code>，直至没有外层</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="only"><a href="#only" class="headerlink" title="only"></a>only</h3><p>可以给<code>describe</code>和<code>test</code>添加only，这样没有添加only的测试组或者测试会被忽略。</p>
+<h3 id="skip"><a href="#skip" class="headerlink" title="skip"></a>skip</h3><p>类似 <code>only</code>，但作用是忽略当前测试或者测试组。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag"># 测试</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/16/JavaScript%E9%80%92%E5%BD%92/" rel="prev" title="JavaScript递归">
+      <i class="fa fa-chevron-left"></i> JavaScript递归
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/01/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%88%E4%B8%80%EF%BC%89/" rel="next" title="字符编码笔记（一）">
+      字符编码笔记（一） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#jest是什么"><span class="nav-number">1.</span> <span class="nav-text">jest是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jset如何使用"><span class="nav-number">2.</span> <span class="nav-text">jset如何使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">2.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">2.2.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#定制生成jest配置文件"><span class="nav-number">2.2.1.</span> <span class="nav-text">定制生成jest配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置自定义npm命令"><span class="nav-number">2.2.2.</span> <span class="nav-text">配置自定义npm命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置支持ES6语法"><span class="nav-number">2.2.3.</span> <span class="nav-text">配置支持ES6语法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">2.3.</span> <span class="nav-text">使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jest测试代码编写"><span class="nav-number">3.</span> <span class="nav-text">jest测试代码编写</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#测试文件命名"><span class="nav-number">3.1.</span> <span class="nav-text">测试文件命名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关语句语法"><span class="nav-number">3.2.</span> <span class="nav-text">相关语句语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试文件组织"><span class="nav-number">3.3.</span> <span class="nav-text">测试文件组织</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试文件样例"><span class="nav-number">3.4.</span> <span class="nav-text">测试文件样例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#匹配器"><span class="nav-number">4.</span> <span class="nav-text">匹配器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常用匹配器"><span class="nav-number">4.1.</span> <span class="nav-text">常用匹配器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异步测试"><span class="nav-number">5.</span> <span class="nav-text">异步测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#测试回调方法"><span class="nav-number">5.1.</span> <span class="nav-text">测试回调方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试promise"><span class="nav-number">5.2.</span> <span class="nav-text">测试promise</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#记得要return"><span class="nav-number">5.2.1.</span> <span class="nav-text">记得要return</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#采用expect-assertions-测试异常"><span class="nav-number">5.2.2.</span> <span class="nav-text">采用expect.assertions() 测试异常</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#resolves-rejects"><span class="nav-number">5.2.3.</span> <span class="nav-text">.resolves&#x2F;.rejects</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Async-Await"><span class="nav-number">5.3.</span> <span class="nav-text">Async&#x2F;Await</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#钩子函数"><span class="nav-number">6.</span> <span class="nav-text">钩子函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试分组和钩子函数"><span class="nav-number">7.</span> <span class="nav-text">测试分组和钩子函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">8.</span> <span class="nav-text">其他</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#only"><span class="nav-number">8.1.</span> <span class="nav-text">only</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#skip"><span class="nav-number">8.2.</span> <span class="nav-text">skip</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Vigo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vigo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

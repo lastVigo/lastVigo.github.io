@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lastvigo.github.io","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="微信小程序开发流程介绍。扫码打开的微信小程序如何调试？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信小程序系列（一）">
+<meta property="og:url" content="https://lastvigo.github.io/2019/01/23/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="Vigo&#39;s Blog">
+<meta property="og:description" content="微信小程序开发流程介绍。扫码打开的微信小程序如何调试？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://developers.weixin.qq.com/miniprogram/dev/image/mina-lifecycle.png?t=19012115">
+<meta property="article:published_time" content="2019-01-23T00:03:42.000Z">
+<meta property="article:modified_time" content="2020-03-17T02:04:01.288Z">
+<meta property="article:author" content="Vigo">
+<meta property="article:tag" content="微信小程序">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://developers.weixin.qq.com/miniprogram/dev/image/mina-lifecycle.png?t=19012115">
+
+<link rel="canonical" href="https://lastvigo.github.io/2019/01/23/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>微信小程序系列（一） | Vigo's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Vigo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lastvigo.github.io/2019/01/23/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Vigo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vigo's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          微信小程序系列（一）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-01-23 08:03:42" itemprop="dateCreated datePublished" datetime="2019-01-23T08:03:42+08:00">2019-01-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-17 10:04:01" itemprop="dateModified" datetime="2020-03-17T10:04:01+08:00">2020-03-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">微信小程序开发流程介绍。扫码打开的微信小程序如何调试？</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>微信开发者工具版本：v1.02.1901170。</p>
+<p>本文写作时间：2019年1月。</p>
+<p>接手了一个小程序维护的任务，虽然做过几个小程序了，但小程序版本和功能迭代的实在是快，摸索着前进吧。</p>
+<h1 id="wx-previewImage接口调用"><a href="#wx-previewImage接口调用" class="headerlink" title="wx.previewImage接口调用"></a>wx.previewImage接口调用</h1><p>官方文档在<a href="https://developers.weixin.qq.com/miniprogram/dev/api/wx.previewImage.html?search-key=wx.previewImage" target="_blank" rel="noopener">这里</a>,还给了示例代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wx.previewImage(&#123;</span><br><span class="line">  current: &#39;&#39;, &#x2F;&#x2F; 当前显示图片的http链接</span><br><span class="line">  urls: [] &#x2F;&#x2F; 需要预览的图片http链接列表</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>一开始就是因为信了它的邪，代码这么写的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let picUrl&#x3D;&#39;xxxx&#39;;</span><br><span class="line">wx.previewImage(&#123;</span><br><span class="line">  current: picUrl, </span><br><span class="line">  urls: [picUrl] </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>结果是调用后，毛线都不见一根，也不报错。为了验证，还特意追加了<strong>success</strong>和<strong>fail</strong>回调。发现调用后走的success。逻辑没错。难道是样式问题？</p>
+<p>这个接口调用的应该是小程序框架的功能，长按图片还可以选择操作。显然不是自己写的界面。</p>
+<p>只能看看他山之石了。看过其他人调用成功的代码后发现，<strong>urls</strong>的赋值和我的不同，他们是声明了数组，传参的时候引用了那个数组，遂对代码进行了修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">let picUrl&#x3D;&#39;xxxx&#39;;</span><br><span class="line">let pics&#x3D;new Array();</span><br><span class="line">pics.push(picUrl);</span><br><span class="line">wx.previewImage(&#123;</span><br><span class="line">  current: picUrl, </span><br><span class="line">  urls: pics </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>以上代码和前面的区别就在数组的声明，居然就好用了。</p>
+<p>道理嘛，实在不知道。记得就行了。</p>
+<h1 id="setData接口调用"><a href="#setData接口调用" class="headerlink" title="setData接口调用"></a>setData接口调用</h1><p>在网络请求的回调方法中我看到这样的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">that.setData(&#123; middleLeft: res.data.middleLeft &#125;);</span><br><span class="line">that.setData(&#123; middleLeftDesc: res.data.middleLeftDesc &#125;);</span><br><span class="line">that.setData(&#123; middleRight: res.data.middleRight &#125;);</span><br><span class="line">that.setData(&#123; middleRightDesc: res.data.middleRightDesc &#125;);</span><br><span class="line">that.setData(&#123; bottomList: res.data.bottomList &#125;);</span><br><span class="line">that.setData(&#123; profileList: res.data.profileList &#125;);</span><br><span class="line">that.setData(&#123; pic: res.data.pic &#125;);</span><br><span class="line">that.setData(&#123; img: res.data.img &#125;);</span><br><span class="line">that.setData(&#123; enName: res.data.enName &#125;);</span><br><span class="line">that.setData(&#123; name: res.data.name &#125;);</span><br><span class="line">that.setData(&#123; detailInfoList: res.data.detailInfoList&#125;);</span><br><span class="line">that.setData(&#123; season: res.data.season &#125;);</span><br><span class="line">that.setData(&#123; openTime: res.data.openTime &#125;);</span><br><span class="line">that.setData(&#123; priceDesc: res.data.priceDesc &#125;);</span><br><span class="line">that.setData(&#123; webUrl: res.data.webUrl &#125;);</span><br><span class="line">that.setData(&#123; tel: res.data.tel &#125;);</span><br><span class="line">that.setData(&#123; address: res.data.address &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>从ajax过来的同志对<strong>that</strong>不陌生，其实就是利用闭包传递的小程序环境的<strong>this</strong>。</p>
+<p>业务逻辑是取得到数据后，给页面数据赋值，利用小程序机制刷新显示。真机调试的时候还发现这段代码导致一堆错误，因为有些时候，返回的数据没有这么全。</p>
+<p>接着我对以上代码做了如下的修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let rst&#x3D;Object.assign(&#123;&#125;,that.data);</span><br><span class="line">Object.assign(rst, res.data);</span><br><span class="line">that.setData(rst);</span><br></pre></td></tr></table></figure>
+
+<p>说一下这么做的理由：</p>
+<ol>
+<li>避免了多次调用setData。</li>
+<li>避免了因为返回值不全，强行赋值导致的运行时错误。</li>
+<li>代码简洁了。</li>
+</ol>
+<p>关于第一点，虽然没有确切的依据，但在官方的生命周期图中有线索：<br><img src="https://developers.weixin.qq.com/miniprogram/dev/image/mina-lifecycle.png?t=19012115" alt="Page 实例的生命周期图"></p>
+<p>从上图中可见，调用setData会触发渲染，如果短时间内多次调用，效率和性能会带来影响，尤其是数据之间在显示层面还有逻辑纠缠的情况下。官方文档说明单次赋值不要超过<strong>1024kB</strong>，在这个前提下，还是提倡少调用这个接口。</p>
+<p>关于第二点，官方文档中有说明。</p>
+<blockquote>
+<p>请不要把 data 中任何一项的 value 设为 undefined ，否则这一项将不被设置并可能遗留一些潜在问题</p>
+</blockquote>
+<p>另外采用<strong>Object.assign</strong>算是一个小技巧，第二个参数的属性会被赋值到第一个参数上。</p>
+<p>就这样。</p>
+<h1 id="关于扫描带参数的二维码进入小程序"><a href="#关于扫描带参数的二维码进入小程序" class="headerlink" title="关于扫描带参数的二维码进入小程序"></a>关于扫描带参数的二维码进入小程序</h1><h2 id="关于生成小程序入口二维码"><a href="#关于生成小程序入口二维码" class="headerlink" title="关于生成小程序入口二维码"></a>关于生成小程序入口二维码</h2><p><a href="https://developers.weixin.qq.com/miniprogram/dev/api/getWXACodeUnlimit.html" target="_blank" rel="noopener">生成接口</a>和过程不赘述。需要特别注意的是这个二维码指向的是小程序中的一个页面，而不是小程序。之所以强调这点，是因为遇到了坑。如果你把解析小程序入口二维码参数的代码写在了app.js中的onLaunch方法中，那么恭喜你，在你刷另一个入口二维码时，看到的内容仍然是前一个的。需要用户删除小程序再次刷码内容才会更新。最关键的问题是，<strong>这个问题只有在上线后才会被发现，后面的开发和调试阶段不会被发现</strong>。</p>
+<h2 id="开发阶段如何调试"><a href="#开发阶段如何调试" class="headerlink" title="开发阶段如何调试"></a>开发阶段如何调试</h2><p>微信开发者工具给这样的小程序调试提供了几种方式：</p>
+<ol>
+<li>自定义编译条件。参数和生成小程序入口二维码基本一样。</li>
+<li>通过二维码编译。如果你已经生成了小程序二维码可以使用这种方式，选择二维码文件即可。</li>
+</ol>
+<p>以上两种方式，参数已经编译在版本内了。所以通过微信开发者工具生成的二维码扫描打开调试版本后，已经带有参数了。如果你想更换入口参数是可以的，但无论是模拟器、扫码打开测试版、真机测试，更换参数后打开后，无法模拟小程序转后台后再次扫码进入的情形，也就是说更换参数后，重新编译，打开的小程序会走完小程序的全部生命周期。</p>
+<h2 id="发布前的测试"><a href="#发布前的测试" class="headerlink" title="发布前的测试"></a>发布前的测试</h2><p>开发没有问题后，需要做发布前的测试。想象中的调试方式和<a href="https://developers.weixin.qq.com/community/develop/doc/000446e00606f8c705973693a51800" target="_blank" rel="noopener">这位</a>一样，试图扫描生成的小程序入口二维码打开体验版小程序。但似乎是做不到。这一点让人觉得很没底气，尤其是已经上线项目。</p>
+<h1 id="使用web-view打开网页"><a href="#使用web-view打开网页" class="headerlink" title="使用web-view打开网页"></a>使用web-view打开网页</h1><h2 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h2><p>小程序可以打开关联公众号内的网页，也可以打开其它的网页，但是受到限制。</p>
+<p>如果你的小程序想要打开一个第三方网站下的网页，需要向对方网站服务器下放置经过微信公众平台发出的认证文件。这条件一般很难做到，尝试到这部截止了。</p>
+<p>另外打开的第三方网站肯定要有备案，采用https协议，等等的，后面这些没有走完。</p>
+<h1 id="真机调试遇到的问题"><a href="#真机调试遇到的问题" class="headerlink" title="真机调试遇到的问题"></a>真机调试遇到的问题</h1><p>在升级微信开发者工具前，只在真机调试情况下发现部分网络请求api没有回包，而且没有任何错误信息。升级开发工具后，问题莫名其妙的消失了。</p>
+<h1 id="小程序全流程总结"><a href="#小程序全流程总结" class="headerlink" title="小程序全流程总结"></a>小程序全流程总结</h1><p>大致流程如下：</p>
+<ol>
+<li>注册微信公众平台账号，选择账号类型，选择小程序开发。</li>
+<li>填写小程序信息。</li>
+<li>记录小程序AppID(小程序ID)和AppSecret(小程序密钥)。备用。</li>
+<li>添加管理用户、开发者、体验者各类参与者。</li>
+<li>开发和测试。</li>
+<li>上传体验版。</li>
+<li>体验版提交审核。</li>
+<li>审核过后发布。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag"># 微信小程序</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/01/14/%E4%B9%B1%E7%82%96fetch%E3%80%81json_schema/" rel="prev" title="乱炖fetch、json_Schema">
+      <i class="fa fa-chevron-left"></i> 乱炖fetch、json_Schema
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/02/16/%E7%AE%80%E8%B0%88%E4%B8%AD%E5%9B%BD%E7%8E%B0%E8%A1%8C%E5%8E%86%E6%B3%95/" rel="next" title="简谈中国现行历法">
+      简谈中国现行历法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#wx-previewImage接口调用"><span class="nav-number">2.</span> <span class="nav-text">wx.previewImage接口调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#setData接口调用"><span class="nav-number">3.</span> <span class="nav-text">setData接口调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于扫描带参数的二维码进入小程序"><span class="nav-number">4.</span> <span class="nav-text">关于扫描带参数的二维码进入小程序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于生成小程序入口二维码"><span class="nav-number">4.1.</span> <span class="nav-text">关于生成小程序入口二维码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发阶段如何调试"><span class="nav-number">4.2.</span> <span class="nav-text">开发阶段如何调试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发布前的测试"><span class="nav-number">4.3.</span> <span class="nav-text">发布前的测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用web-view打开网页"><span class="nav-number">5.</span> <span class="nav-text">使用web-view打开网页</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#限制"><span class="nav-number">5.1.</span> <span class="nav-text">限制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#真机调试遇到的问题"><span class="nav-number">6.</span> <span class="nav-text">真机调试遇到的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小程序全流程总结"><span class="nav-number">7.</span> <span class="nav-text">小程序全流程总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Vigo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vigo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

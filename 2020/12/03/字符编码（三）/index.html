@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lastvigo.github.io","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="字符编码，常用字符编码规范：Unicode。UTF-32，UTF-16，UTF-8编码实现。了解UCS-2编码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="字符编码笔记（三）">
+<meta property="og:url" content="https://lastvigo.github.io/2020/12/03/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%88%E4%B8%89%EF%BC%89/index.html">
+<meta property="og:site_name" content="Vigo&#39;s Blog">
+<meta property="og:description" content="字符编码，常用字符编码规范：Unicode。UTF-32，UTF-16，UTF-8编码实现。了解UCS-2编码">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-02T23:56:36.000Z">
+<meta property="article:modified_time" content="2020-12-10T02:46:34.053Z">
+<meta property="article:author" content="Vigo">
+<meta property="article:tag" content="字符编码">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lastvigo.github.io/2020/12/03/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%88%E4%B8%89%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>字符编码笔记（三） | Vigo's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Vigo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lastvigo.github.io/2020/12/03/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%88%E4%B8%89%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Vigo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vigo's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          字符编码笔记（三）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-03 07:56:36" itemprop="dateCreated datePublished" datetime="2020-12-03T07:56:36+08:00">2020-12-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-10 10:46:34" itemprop="dateModified" datetime="2020-12-10T10:46:34+08:00">2020-12-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">字符编码，常用字符编码规范：Unicode。UTF-32，UTF-16，UTF-8编码实现。了解UCS-2编码</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Unicode"><a href="#Unicode" class="headerlink" title="Unicode"></a>Unicode</h2><p>Unicode出现的目的就是为了解决国家地区之间字符编码互相不兼容的情况，所以尽可能多的收集已知的字符。</p>
+<p>因为编码的字符很多，所以采用了类似GB2312分区的方式，不过这里的区称为平面，每个平面可以存放2<sup>16</sup>(65536)个符号。</p>
+<p>目前暂时有17个平面，所以总共有2<sup>21</sup>个码位，需要3个字节，最常用的字符对应在最前面的65536码位，称为基本平面（BMP），剩下的称为辅助平面（SMP）。</p>
+<p>Unicode规定了字符对应的码位，还规定了几种编码方式，就是不同的编码字符集转换字符编码表方式。</p>
+<h3 id="UTF-8"><a href="#UTF-8" class="headerlink" title="UTF-8"></a>UTF-8</h3><p>最通用的字符编码方式，晚于UTF-16出现。</p>
+<p>采用变长编码，可以是1～3个字节。</p>
+<p>编码规则如下：</p>
+<ul>
+<li>0x0～07F码位：编码为1个字节，和ASCII完全一致。</li>
+<li>0x80~0x7FF码位：编码为2个字节。使用原来码位填充格式：110xxxxx 10xxxxxx</li>
+<li>0x800~0xFFFF码位：编码为3个字节。使用原来码位填充格式：1110xxxx 10xxxxxx 10xxxxxx</li>
+<li>0x10000~0x10FFFF码位：编码为4个字节。使用原来码位填充格式：11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</li>
+</ul>
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ul>
+<li>完全兼容ASCII</li>
+<li>节省空间</li>
+<li>第一个字节指明了码单元的所占的字节数</li>
+<li>后续每个字节都有固定的前缀</li>
+<li>码单元之间容易区分</li>
+</ul>
+<h3 id="UTF-16"><a href="#UTF-16" class="headerlink" title="UTF-16"></a>UTF-16</h3><p>基本平面内的码位编码为2个字节，其余使用4个字节。</p>
+<p>对于基本平面（恰好是2字节）的码位，不足位在前端补充0即可。</p>
+<p>对于其余平面码位，如果直接使用码位顺位下来的数字编码，会造成无法区分当前字节属于哪一种码单元（code unit）。</p>
+<p>在基本平面的0xD800～0xDFFF，存在一片没有空余出来的码位，可以利用这个特点区分当前字节是否在是基本平面的编码字节，这段码位如果被占用，则应该是4个字节的其他平面字符编码。</p>
+<p>上述空余码位区间被一份为2，形成了两个部分，0xD800~0xDBFF和0xDC00～0xDFFF，二进制形式分别是：<code>0b1101 10HH HHHH HHHH</code>和<code>0b1101 11L LLLL LLLL</code>。这就形成了UTF-16中4字节编码的格式：<code>0b1101 10HH HHHH 1101 11L LLLL</code>，用其他平面的码位经过计算填充格式中的H和L即可。</p>
+<p>计算方法</p>
+<ul>
+<li>码位减去0x10000，得到一个数字</li>
+<li>转为2进制，填充为20位</li>
+<li>前10位填充上述H位</li>
+<li>后20位填充上述L位</li>
+</ul>
+<p>计算公式如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; c为 其他平面的码位</span><br><span class="line">H &#x3D; Math.floor((c-0x10000) &#x2F; 0x400)+0xD800</span><br><span class="line">L &#x3D; (c - 0x10000) % 0x400 + 0xDC00</span><br></pre></td></tr></table></figure>
+
+<h4 id="辅助平面计算示例"><a href="#辅助平面计算示例" class="headerlink" title="辅助平面计算示例"></a>辅助平面计算示例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">str&#x3D;&#39;A𠮷&#39;</span><br><span class="line">let tempStr1&#x3D;str.codePointAt(0)</span><br><span class="line">let tempStr2&#x3D;str.codePointAt(1)</span><br><span class="line">let tempStr3&#x3D;str.codePointAt(2)</span><br><span class="line">console.log(tempStr1)&#x2F;&#x2F; 65</span><br><span class="line">console.log(tempStr2)&#x2F;&#x2F; 134071</span><br><span class="line">console.log(tempStr3)&#x2F;&#x2F; 57271</span><br><span class="line">console.log(String.fromCodePoint(tempStr1))&#x2F;&#x2F; A</span><br><span class="line">console.log(String.fromCodePoint(tempStr2))&#x2F;&#x2F;𠮷</span><br></pre></td></tr></table></figure>
+
+<p>这个字符串中，<code>A</code>处在基本平面内，<code>𠮷</code>处在辅助平面内，所以字符串是6个字节，长度是3。<br>tempStr2是获取到的<code>𠮷</code>码点，最后一行的输出可以验证这一点。<br>那么tempStr3是什么呢？是该字符串最后2个字节的值。可以验证一下。</p>
+<p>前面知道了<code>𠮷</code>码点是<code>134071</code>，转换成16进制就是<code>0x20bb7</code>，根据UTF-16编码规则，首先减去<code>0x10000</code>，得到<code>0x10bb7</code>，二进制为<code>0b0001 0000 1011 1011 0111</code>,取后半部分<code>11 1011 0111</code>填充到低位格式中去，得到<code>0b1101 1111 1011 0111</code>，就是10进制的<code>57271</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 接前一部分代码</span><br><span class="line">let tempStr4&#x3D;str.charCodeAt(0)</span><br><span class="line">let tempStr5&#x3D;str.charCodeAt(1)</span><br><span class="line">let tempStr6&#x3D;str.charCodeAt(2)</span><br><span class="line"></span><br><span class="line">console.log(tempStr4)&#x2F;&#x2F;65</span><br><span class="line">console.log(tempStr5)&#x2F;&#x2F;55362</span><br><span class="line">console.log(tempStr6)&#x2F;&#x2F;57271</span><br></pre></td></tr></table></figure>
+
+<p>tempStr5的值为什么是<code>55362</code>？因为字符串的第3、4字节存储的值就是它。接着上面说的验证步骤，提取<code>0b0001 0000 1011 1011 0111</code>的前10位填充进高位格式中去，得到<code>0b1101100001000010</code>，就是10进制的<code>55362</code>。</p>
+<h3 id="UTF-32"><a href="#UTF-32" class="headerlink" title="UTF-32"></a>UTF-32</h3><p>最直接的编码方式，用4个字节表示所有码位。浪费存储空间。</p>
+<h3 id="UCS-2编码"><a href="#UCS-2编码" class="headerlink" title="UCS-2编码"></a>UCS-2编码</h3><p>UCS-2编码早于UTF-16出现，所以被许多编程语言首先支持。</p>
+<p>UCS-2只支持基本平面的字符编码，是UTF-16的子集。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81/" rel="tag"># 字符编码</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/02/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%88%E4%BA%8C%EF%BC%89/" rel="prev" title="字符编码笔记（二）">
+      <i class="fa fa-chevron-left"></i> 字符编码笔记（二）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/04/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%88%E5%9B%9B%EF%BC%89/" rel="next" title="字符编码笔记（四）">
+      字符编码笔记（四） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Unicode"><span class="nav-number">1.</span> <span class="nav-text">Unicode</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UTF-8"><span class="nav-number">1.1.</span> <span class="nav-text">UTF-8</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特点"><span class="nav-number">1.1.1.</span> <span class="nav-text">特点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UTF-16"><span class="nav-number">1.2.</span> <span class="nav-text">UTF-16</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#辅助平面计算示例"><span class="nav-number">1.2.1.</span> <span class="nav-text">辅助平面计算示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UTF-32"><span class="nav-number">1.3.</span> <span class="nav-text">UTF-32</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UCS-2编码"><span class="nav-number">1.4.</span> <span class="nav-text">UCS-2编码</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Vigo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vigo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

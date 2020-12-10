@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lastvigo.github.io","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文介绍了采用javascript编程，在nodejs环境下读取Excel文件，根据文件内容和数据库表结构生成insert SQL语句，最后保存在文件中。 js-xlsx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nodejs读取Excel生成SQL文件">
+<meta property="og:url" content="https://lastvigo.github.io/2019/11/17/nodejs%E8%AF%BB%E5%8F%96Excel%E7%94%9F%E6%88%90SQL%E6%96%87%E4%BB%B6/index.html">
+<meta property="og:site_name" content="Vigo&#39;s Blog">
+<meta property="og:description" content="本文介绍了采用javascript编程，在nodejs环境下读取Excel文件，根据文件内容和数据库表结构生成insert SQL语句，最后保存在文件中。 js-xlsx">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-11-17T01:04:12.000Z">
+<meta property="article:modified_time" content="2019-11-17T02:41:52.619Z">
+<meta property="article:author" content="Vigo">
+<meta property="article:tag" content="nodejs">
+<meta property="article:tag" content="SQL">
+<meta property="article:tag" content="Excel">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lastvigo.github.io/2019/11/17/nodejs%E8%AF%BB%E5%8F%96Excel%E7%94%9F%E6%88%90SQL%E6%96%87%E4%BB%B6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>nodejs读取Excel生成SQL文件 | Vigo's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Vigo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lastvigo.github.io/2019/11/17/nodejs%E8%AF%BB%E5%8F%96Excel%E7%94%9F%E6%88%90SQL%E6%96%87%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Vigo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vigo's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          nodejs读取Excel生成SQL文件
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-11-17 09:04:12 / 修改时间：10:41:52" itemprop="dateCreated datePublished" datetime="2019-11-17T09:04:12+08:00">2019-11-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">本文介绍了采用javascript编程，在nodejs环境下读取Excel文件，根据文件内容和数据库表结构生成insert SQL语句，最后保存在文件中。 js-xlsx</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="需求背景"><a href="#需求背景" class="headerlink" title="需求背景"></a>需求背景</h1><p>拿到一份Excel文件，里面存有数万条数据，想要导入到数据库中到一张表中。</p>
+<p>文件和表结构并不完全匹配，数据正确性也无法保证。</p>
+<p>因为数量实在太大，不排除有错误情况，还希望导入操作可逆。</p>
+<p>所以，生成包含insert语句的SQL文件比较好。</p>
+<h1 id="为什么选择nodejs"><a href="#为什么选择nodejs" class="headerlink" title="为什么选择nodejs"></a>为什么选择nodejs</h1><p>以上需求比较简单，当然也希望开发环境搭建越简单越好。另外也想进一步学习nodejs编程，遂采用了本文的方案。</p>
+<h1 id="实现步骤"><a href="#实现步骤" class="headerlink" title="实现步骤"></a>实现步骤</h1><h2 id="如何读取Excel文件"><a href="#如何读取Excel文件" class="headerlink" title="如何读取Excel文件"></a>如何读取Excel文件</h2><p>应该说nodejs的生态已经相当完整了，简单搜索了一下，选项还是很多的。因为不涉及导出Excel文件，就挑了据说评价最高的一个：<a href="https://github.com/SheetJS/sheetjs" target="_blank" rel="noopener">js-xlsx</a>，以下都简称xlsx。</p>
+<h2 id="简单介绍js-xlsx"><a href="#简单介绍js-xlsx" class="headerlink" title="简单介绍js-xlsx"></a>简单介绍js-xlsx</h2><p>这个库实现了Excel文件的读写功能。这里只介绍相关的读取流程。</p>
+<h3 id="读取Excel-文件"><a href="#读取Excel-文件" class="headerlink" title="读取Excel 文件"></a>读取Excel 文件</h3><p>xlsx读取文件需要fs模块的辅助，本文中，xlsx读取的是fs模块读取到到文件缓存内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var buf &#x3D; fs.readFileSync(&quot;.&#x2F;excelfiles&#x2F;big.xlsx&quot;);</span><br><span class="line">&#x2F;&#x2F; 读取excel文档，存放在workbook中</span><br><span class="line">var workbook &#x3D; XLSX.read(buf, &#123; type: &#39;buffer&#39; &#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="读取到到内容处理"><a href="#读取到到内容处理" class="headerlink" title="读取到到内容处理"></a>读取到到内容处理</h3><p>上一步读取到的<strong>workbook</strong>，对应一个Excel文件，其中存在和Excel文件对应的<strong>工作簿</strong>和<strong>单元格</strong>。这里需要注意：单元格的行号是从<strong>1</strong>开始的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 得到excel工作簿数组</span><br><span class="line">var sheetNames &#x3D; workbook.SheetNames;</span><br><span class="line">&#x2F;&#x2F; 得到中第一个工作簿</span><br><span class="line">var worksheet &#x3D; workbook.Sheets[sheetNames[0]];</span><br><span class="line">&#x2F;&#x2F; 得到第一个工作簿中B3单元格</span><br><span class="line">var cellB3&#x3D;worksheet[&#39;B3&#39;];</span><br></pre></td></tr></table></figure>
+
+<p>单元格cell并不是简单的值，而是一个<a href="https://github.com/SheetJS/sheetjs#cell-object" target="_blank" rel="noopener">对象</a>,因为需求简单，我们只取其中的v（value）属性即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let tempStr &#x3D; cellB3.v;</span><br></pre></td></tr></table></figure>
+
+<h3 id="获取总行数"><a href="#获取总行数" class="headerlink" title="获取总行数"></a>获取总行数</h3><p>因为我们需要依次处理工作簿中的行数据，所以需要知道其中的总行数。当然如果只是一次性的操作，这个行数可以查看Excel文件后指定。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 读取该工作簿的范围，返回一个由起止单元格名称组成的字符串（如&#39;A1:B20&#39;）</span><br><span class="line">var rangeStr &#x3D; worksheet[&#39;!ref&#39;];</span><br><span class="line">var patt1 &#x3D; &#x2F;\d+&#x2F;g;</span><br><span class="line">&#x2F;&#x2F; 解析该字符串，分别得到起止行的行号</span><br><span class="line">var lineArr &#x3D; rangeStr.match(patt1);</span><br><span class="line">let lineStart &#x3D; lineArr[0];</span><br><span class="line">var lineEnd &#x3D; lineArr[1];</span><br></pre></td></tr></table></figure>
+
+<h3 id="遍历行，拼接字符串"><a href="#遍历行，拼接字符串" class="headerlink" title="遍历行，拼接字符串"></a>遍历行，拼接字符串</h3><p>了解前面的方法后，就是简单的逐行遍历，拼接字符串过程了。这里不赘述了。详情参见<a href="https://github.com/lastVigo/create_sqlfilel_by_excelfile" target="_blank" rel="noopener">项目</a>。</p>
+<p>因为数据表中主键是通过系统程序生成的随机字符串，并不能做到严格的不重复，而且系统程序是java写的。所以觉得没有必要采用javascript再重写一份，所以找了一个<a href="https://github.com/ai/nanoid" target="_blank" rel="noopener">现成的包</a>替代，实际效果未经检测。</p>
+<h1 id="实际效果"><a href="#实际效果" class="headerlink" title="实际效果"></a>实际效果</h1><p>得到的Excel文件中包含8万余条数据，18M。通过本项目项目程序导出后的文本文件达到31M。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://aotu.io/notes/2016/04/07/node-excel/index.html" target="_blank" rel="noopener">Node读写Excel文件探究实践</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/nodejs/" rel="tag"># nodejs</a>
+              <a href="/tags/SQL/" rel="tag"># SQL</a>
+              <a href="/tags/Excel/" rel="tag"># Excel</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/10/11/%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%94%9F%E6%88%90%E4%B8%AD%E6%96%87%E6%96%87%E4%BB%B6%E5%A4%B1%E8%B4%A5%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" rel="prev" title="服务器生成中文文件失败的问题解决">
+      <i class="fa fa-chevron-left"></i> 服务器生成中文文件失败的问题解决
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/12/03/%E5%AE%B6%E7%94%A8%E6%89%93%E5%8D%B0%E6%9C%BA%E9%80%89%E8%B4%AD/" rel="next" title="家用打印机选购">
+      家用打印机选购 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#需求背景"><span class="nav-number">1.</span> <span class="nav-text">需求背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么选择nodejs"><span class="nav-number">2.</span> <span class="nav-text">为什么选择nodejs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现步骤"><span class="nav-number">3.</span> <span class="nav-text">实现步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#如何读取Excel文件"><span class="nav-number">3.1.</span> <span class="nav-text">如何读取Excel文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单介绍js-xlsx"><span class="nav-number">3.2.</span> <span class="nav-text">简单介绍js-xlsx</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读取Excel-文件"><span class="nav-number">3.2.1.</span> <span class="nav-text">读取Excel 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#读取到到内容处理"><span class="nav-number">3.2.2.</span> <span class="nav-text">读取到到内容处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取总行数"><span class="nav-number">3.2.3.</span> <span class="nav-text">获取总行数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#遍历行，拼接字符串"><span class="nav-number">3.2.4.</span> <span class="nav-text">遍历行，拼接字符串</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实际效果"><span class="nav-number">4.</span> <span class="nav-text">实际效果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Vigo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vigo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
