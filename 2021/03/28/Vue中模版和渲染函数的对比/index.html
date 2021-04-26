@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lastvigo.github.io","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="对比使用模版、渲染函数中使用createElement和JSX三种方式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue中模版和渲染函数的对比">
+<meta property="og:url" content="https://lastvigo.github.io/2021/03/28/Vue%E4%B8%AD%E6%A8%A1%E7%89%88%E5%92%8C%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0%E7%9A%84%E5%AF%B9%E6%AF%94/index.html">
+<meta property="og:site_name" content="Vigo&#39;s Blog">
+<meta property="og:description" content="对比使用模版、渲染函数中使用createElement和JSX三种方式">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-03-28T11:40:35.000Z">
+<meta property="article:modified_time" content="2021-03-30T08:45:57.189Z">
+<meta property="article:author" content="Vigo">
+<meta property="article:tag" content="vue">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lastvigo.github.io/2021/03/28/Vue%E4%B8%AD%E6%A8%A1%E7%89%88%E5%92%8C%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0%E7%9A%84%E5%AF%B9%E6%AF%94/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>Vue中模版和渲染函数的对比 | Vigo's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Vigo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lastvigo.github.io/2021/03/28/Vue%E4%B8%AD%E6%A8%A1%E7%89%88%E5%92%8C%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0%E7%9A%84%E5%AF%B9%E6%AF%94/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Vigo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vigo's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Vue中模版和渲染函数的对比
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-03-28 19:40:35" itemprop="dateCreated datePublished" datetime="2021-03-28T19:40:35+08:00">2021-03-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-30 16:45:57" itemprop="dateModified" datetime="2021-03-30T16:45:57+08:00">2021-03-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">对比使用模版、渲染函数中使用createElement和JSX三种方式</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="做这个对比的意义"><a href="#做这个对比的意义" class="headerlink" title="做这个对比的意义"></a>做这个对比的意义</h2><p>对于Vue开发，绝大多数情况都是使用模版<code>template</code>的方式来写渲染逻辑，但是通过官方文档我们知道有渲染函数<code>render</code>的存在。对于初学者，使用<code>template</code>能够快速上手，然而做一些高阶开发就用得上<code>render</code> 了。在<code>render</code>中，又有两种实现的途径，分别是基于<code>createElement</code>方法和JSX语法。</p>
+<p>文档说<code>render</code> 更接近实际编译器。这个对比会让人对这句话有更直观的体会。另外对于模版的一些语法背后的实现也会有更深的理解。</p>
+<p>本文会实现几项基本功能，每次都以<code>template</code>开始，接着用后面两种方式实现同样的功能。</p>
+<p>render函数的参数是：<code>createElement</code>函数，为了简化也为了和bable工具统一，都写作了<code>h</code>。</p>
+<h2 id="渲染基本数据"><a href="#渲染基本数据" class="headerlink" title="渲染基本数据"></a>渲染基本数据</h2><p>组件其它部分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">let vBindCom&#x3D;&#123;</span><br><span class="line">    props:&#123;</span><br><span class="line">        content:String,</span><br><span class="line">        styleObj:Object</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="template"><a href="#template" class="headerlink" title="template"></a>template</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">template:</span><br><span class="line">&#96;&lt;p :style&#x3D;&quot;styleObj&quot;&gt;&#123;&#123;content&#125;&#125;&lt;&#x2F;p&gt;&#96;</span><br></pre></td></tr></table></figure>
+
+<p>###render:createElement</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">render:<span class="function"><span class="keyword">function</span>(<span class="params">h</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> h(</span><br><span class="line">    <span class="string">'p'</span>,</span><br><span class="line">		&#123;</span><br><span class="line">      style:<span class="keyword">this</span>.styleObj</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="keyword">this</span>.content</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="render-jsx"><a href="#render-jsx" class="headerlink" title="render:jsx"></a>render:jsx</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">render:<span class="function"><span class="keyword">function</span>(<span class="params">h</span>)</span>&#123;</span><br><span class="line"> <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">p</span> <span class="attr">style</span>=<span class="string">&#123;this.styleObj&#125;</span>&gt;</span>&#123;this.content&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="v-html"><a href="#v-html" class="headerlink" title="v-html"></a>v-html</h2><p>组件其它部分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">props: &#123;</span><br><span class="line">   htmlcontent: String</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="template-1"><a href="#template-1" class="headerlink" title="template"></a>template</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;p&gt;&lt;span v-html&#x3D;&quot;htmlcontent&quot;&gt;&lt;&#x2F;span&gt; by template&lt;&#x2F;p&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="render：crateElement"><a href="#render：crateElement" class="headerlink" title="render：crateElement"></a>render：crateElement</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">render: function (h) &#123;</span><br><span class="line">    return h(&quot;p&quot;, [</span><br><span class="line">      h(&quot;span&quot;, &#123;</span><br><span class="line">        domProps: &#123;</span><br><span class="line">          innerHTML: this.htmlcontent,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;),</span><br><span class="line">      &quot; by render createElement&quot;,</span><br><span class="line">    ]);</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+<h3 id="render：jsx"><a href="#render：jsx" class="headerlink" title="render：jsx"></a>render：jsx</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">render: function (h) &#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;p&gt;</span><br><span class="line">        &lt;span domPropsInnerHTML&#x3D;&#123;this.htmlcontent&#125;&gt;&lt;&#x2F;span&gt; by render jsx</span><br><span class="line">      &lt;&#x2F;p&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+
+
+<p>##v-if/v-else</p>
+<p>组件其它部分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">props: &#123;</span><br><span class="line">    openFlag: Boolean</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="template-2"><a href="#template-2" class="headerlink" title="template"></a>template</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;div v-if&#x3D;&quot;openFlag&quot;&gt;It&#39;s open&lt;&#x2F;div&gt;</span><br><span class="line">    &lt;div v-else&gt;It&#39;s closed&lt;&#x2F;div&gt;</span><br><span class="line">    &lt;span&gt;by template&lt;&#x2F;span&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="render：crateElement-1"><a href="#render：crateElement-1" class="headerlink" title="render：crateElement"></a>render：crateElement</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">render: function (h) &#123;</span><br><span class="line">    let children &#x3D; [];</span><br><span class="line">    if (this.openFlag) &#123;</span><br><span class="line">      children.push(h(&quot;div&quot;, &quot;It&#39;s open&quot;));</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      children.push(h(&quot;div&quot;, &quot;It&#39;s closed&quot;));</span><br><span class="line">    &#125;</span><br><span class="line">    children.push(h(&quot;span&quot;, &quot;by render createElement&quot;));</span><br><span class="line">    return h(&quot;div&quot;, children);</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="render：jsx-1"><a href="#render：jsx-1" class="headerlink" title="render：jsx"></a>render：jsx</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">render: function (h) &#123;</span><br><span class="line">    let children &#x3D; [];</span><br><span class="line">    if (this.openFlag) &#123;</span><br><span class="line">      children.push(&lt;div&gt;It&#39;s open&lt;&#x2F;div&gt;);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      children.push(&lt;div&gt;It&#39;s closed&lt;&#x2F;div&gt;);</span><br><span class="line">    &#125;</span><br><span class="line">    children.push(&lt;span&gt;by render jsx&lt;&#x2F;span&gt;);</span><br><span class="line">    return &lt;div&gt;&#123;children&#125;&lt;&#x2F;div&gt;;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="v-model"><a href="#v-model" class="headerlink" title="v-model"></a>v-model</h2><p>组件其它部分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">props: &#123;</span><br><span class="line">   value: Number</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="template-3"><a href="#template-3" class="headerlink" title="template"></a>template</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;label&gt;</span><br><span class="line">    input a number：</span><br><span class="line">    &lt;input type&#x3D;&quot;number&quot; @input&#x3D;&quot;clickHander&quot; :value&#x3D;&quot;value&quot; &#x2F;&gt;</span><br><span class="line">    &lt;span&gt;输入值：&#123;&#123; value &#125;&#125;&lt;&#x2F;span&gt;</span><br><span class="line">    &lt;span&gt; by template&lt;&#x2F;span&gt;</span><br><span class="line">  &lt;&#x2F;label&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="render：crateElement-2"><a href="#render：crateElement-2" class="headerlink" title="render：crateElement"></a>render：crateElement</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">render: function (h) &#123;</span><br><span class="line">  let children &#x3D; [];</span><br><span class="line">  children.push(&quot;input a number：&quot;);</span><br><span class="line">  children.push(</span><br><span class="line">    h(&quot;input&quot;, &#123;</span><br><span class="line">      attrs: &#123;</span><br><span class="line">        type: &quot;number&quot;,</span><br><span class="line">      &#125;,</span><br><span class="line">      domProps: &#123;</span><br><span class="line">        value: this.value,</span><br><span class="line">      &#125;,</span><br><span class="line">      on: &#123;</span><br><span class="line">        input: this.inputHander,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;)</span><br><span class="line">  );</span><br><span class="line">  children.push(h(&quot;span&quot;, &quot;输入值：&quot; + this.value));</span><br><span class="line">  children.push(h(&quot;span&quot;, &quot; by render createElement&quot;));</span><br><span class="line">  return h(&quot;label&quot;, children);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<p>这里需要注意：使用crateElment函数给input元素绑定值，使用了<code>domProps</code>属性，这和实现<code>v-html</code>时类似。</p>
+<h3 id="render：jsx-2"><a href="#render：jsx-2" class="headerlink" title="render：jsx"></a>render：jsx</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">render: function (h) &#123;</span><br><span class="line">    let children &#x3D; [];</span><br><span class="line">    children.push(&quot;input a number：&quot;);</span><br><span class="line">    children.push(</span><br><span class="line">      &lt;input value&#x3D;&#123;this.value&#125; onInput&#x3D;&#123;this.inputHander&#125; type&#x3D;&quot;number&quot; &#x2F;&gt;</span><br><span class="line">    );</span><br><span class="line">    children.push(&lt;span&gt;输入值：&#123;this.value&#125;&lt;&#x2F;span&gt;);</span><br><span class="line">    children.push(&lt;span&gt; by render jsx&lt;&#x2F;span&gt;);</span><br><span class="line">    return h(&quot;label&quot;, children);</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="v-for"><a href="#v-for" class="headerlink" title="v-for"></a>v-for</h2><p>这个组件用到了另外一个组件，它负责把一条goods的信息渲染在一行（采用了Bootstrap的样式文件）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class&#x3D;&quot;row&quot;&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;col-3 border&quot;&gt;&#123;&#123; item.name &#125;&#125;&lt;&#x2F;div&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;col-3 border text-end&quot;&gt;&#123;&#123; item.price &#125;&#125;&lt;&#x2F;div&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;col-3 border text-end&quot;&gt;&#123;&#123; item.num &#125;&#125;&lt;&#x2F;div&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">import &#123; Goods &#125; from &quot;.&#x2F;vforBase&quot;;</span><br><span class="line">export default &#123;</span><br><span class="line">  props: &#123;</span><br><span class="line">    item: Goods,&#x2F;&#x2F; Goods是定义的一个类，它有三个属性：name、price、num</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>组件的其它部分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import vforItem from &quot;.&#x2F;vforItem&quot;;</span><br><span class="line">...</span><br><span class="line">props: &#123;</span><br><span class="line">   items: Array</span><br><span class="line"> &#125;,</span><br><span class="line"> components: &#123;</span><br><span class="line">   &quot;vfor-item&quot;: vforItem</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面是循环渲染出所有goods的信息。</p>
+<h3 id="template-4"><a href="#template-4" class="headerlink" title="template"></a>template</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class&#x3D;&quot;container-fluid&quot;&gt;</span><br><span class="line">    &lt;vfor-item v-for&#x3D;&quot;(item, index) in items&quot; :key&#x3D;&quot;index&quot; :item&#x3D;&quot;item&quot; &#x2F;&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;text-start&quot;&gt;by template&lt;&#x2F;div&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="render：crateElement-3"><a href="#render：crateElement-3" class="headerlink" title="render：crateElement"></a>render：crateElement</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">render: function (h) &#123;</span><br><span class="line">    let childArr &#x3D; [];</span><br><span class="line">    console.log(this.items.length);</span><br><span class="line">    for (let i &#x3D; 0; i &lt; this.items.length; i++) &#123;</span><br><span class="line">      let item &#x3D; this.items[i];</span><br><span class="line">      childArr.push(</span><br><span class="line">        h(&quot;vfor-item&quot;, &#123;</span><br><span class="line">          props: &#123;</span><br><span class="line">            item,</span><br><span class="line">          &#125;,</span><br><span class="line">          key: i,</span><br><span class="line">        &#125;)</span><br><span class="line">      );</span><br><span class="line">    &#125;</span><br><span class="line">    childArr.push(</span><br><span class="line">      h(</span><br><span class="line">        &quot;div&quot;,</span><br><span class="line">        &#123;</span><br><span class="line">          class: &quot;text-start&quot;,</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;by render createElement&quot;</span><br><span class="line">      )</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    return h(</span><br><span class="line">      &quot;div&quot;,</span><br><span class="line">      &#123;</span><br><span class="line">        class: &quot;container-fluid&quot;,</span><br><span class="line">      &#125;,</span><br><span class="line">      childArr</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="render：jsx-3"><a href="#render：jsx-3" class="headerlink" title="render：jsx"></a>render：jsx</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">render: function (h) &#123;</span><br><span class="line">    let children &#x3D; [];</span><br><span class="line">    for (let i &#x3D; 0; i &lt; this.items.length; i++) &#123;</span><br><span class="line">      let item &#x3D; this.items[i];</span><br><span class="line">      children.push(&lt;vfor-item item&#x3D;&#123;item&#125; key&#x3D;&#123;i&#125;&gt;&lt;&#x2F;vfor-item&gt;);</span><br><span class="line">    &#125;</span><br><span class="line">    children.push(&lt;div class&#x3D;&quot;text-start&quot;&gt;by render jsx&lt;&#x2F;div&gt;);</span><br><span class="line">    return &lt;div class&#x3D;&quot;container-fluid&quot;&gt;&#123;children&#125;&lt;&#x2F;div&gt;;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+
+
+<p>##v-slot</p>
+<h3 id="template-5"><a href="#template-5" class="headerlink" title="template"></a>template</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class&#x3D;&quot;article&quot;&gt;</span><br><span class="line">    This words is in component</span><br><span class="line"></span><br><span class="line">    &lt;slot name&#x3D;&quot;title&quot; &#x2F;&gt;</span><br><span class="line">    &lt;slot &#x2F;&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;by&quot;&gt;by template&lt;&#x2F;div&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="render：crateElement-4"><a href="#render：crateElement-4" class="headerlink" title="render：crateElement"></a>render：crateElement</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">render: function (h) &#123;</span><br><span class="line">    return h(</span><br><span class="line">      &quot;div&quot;,</span><br><span class="line">      &#123;</span><br><span class="line">        class: &quot;article&quot;,</span><br><span class="line">      &#125;,</span><br><span class="line">      [</span><br><span class="line">        &quot;This words is in component&quot;,</span><br><span class="line">        this.$slots.title,</span><br><span class="line">        this.$slots.default,</span><br><span class="line">        h(</span><br><span class="line">          &quot;div&quot;,</span><br><span class="line">          &#123;</span><br><span class="line">            class: &quot;by&quot;,</span><br><span class="line">          &#125;,</span><br><span class="line">          &quot;by render createElement&quot;</span><br><span class="line">        ),</span><br><span class="line">      ]</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="render：jsx-4"><a href="#render：jsx-4" class="headerlink" title="render：jsx"></a>render：jsx</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">render: function (h) &#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;div class&#x3D;&quot;article&quot;&gt;</span><br><span class="line">        This words is in component</span><br><span class="line">        &#123;this.$slots.title&#125;</span><br><span class="line">        &#123;this.$slots.default&#125;</span><br><span class="line">        &lt;div class&#x3D;&quot;by&quot;&gt;by render jsx&lt;&#x2F;div&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+<h2 id="scoped-slot"><a href="#scoped-slot" class="headerlink" title="scoped slot"></a>scoped slot</h2><p>组件的其它部分，组件内部定义了title：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data: function () &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    title: &quot;Title string in component&quot;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>###template</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class&#x3D;&quot;article&quot;&gt;</span><br><span class="line">    This words is in component</span><br><span class="line">    &lt;slot name&#x3D;&quot;title&quot; v-bind:title&#x3D;&quot;title&quot;&gt;&#123;&#123; title &#125;&#125;&lt;&#x2F;slot&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;by&quot;&gt;by template&lt;&#x2F;div&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="render：crateElement-5"><a href="#render：crateElement-5" class="headerlink" title="render：crateElement"></a>render：crateElement</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">render: function (h) &#123;</span><br><span class="line">    let titleContent &#x3D; this.$scopedSlots.title</span><br><span class="line">      ? this.$scopedSlots.title(&#123; title: this.title &#125;)</span><br><span class="line">      : this.title;</span><br><span class="line"></span><br><span class="line">    return h(</span><br><span class="line">      &quot;div&quot;,</span><br><span class="line">      &#123;</span><br><span class="line">        class: &quot;article&quot;,</span><br><span class="line">      &#125;,</span><br><span class="line">      [</span><br><span class="line">        &quot;This words is in component&quot;,</span><br><span class="line">        titleContent,</span><br><span class="line">        h(</span><br><span class="line">          &quot;div&quot;,</span><br><span class="line">          &#123;</span><br><span class="line">            class: &quot;by&quot;,</span><br><span class="line">          &#125;,</span><br><span class="line">          &quot;by render createElement&quot;</span><br><span class="line">        ),</span><br><span class="line">      ]</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="render：jsx-5"><a href="#render：jsx-5" class="headerlink" title="render：jsx"></a>render：jsx</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">render: function (h) &#123;</span><br><span class="line">    let titleContent &#x3D; this.$scopedSlots.title</span><br><span class="line">      ? this.$scopedSlots.title(&#123; title: this.title &#125;)</span><br><span class="line">      : this.title;</span><br><span class="line">    return (</span><br><span class="line">      &lt;div class&#x3D;&quot;article&quot;&gt;</span><br><span class="line">        This words is in component</span><br><span class="line">        &#123;titleContent&#125;</span><br><span class="line">        &lt;div class&#x3D;&quot;by&quot;&gt;by render jsx&lt;&#x2F;div&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+<h2 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h2><p>过滤器就是一个函数，大概定义成这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let myFilter &#x3D; function (val) &#123;</span><br><span class="line">  &#x2F;&#x2F; console.log(val);</span><br><span class="line">  return val.toUpperCase();</span><br><span class="line">&#125;;</span><br><span class="line">export default myFilter;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>组件的其它部分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">filters: &#123; myFilter &#125;,</span><br><span class="line">props: &#123;</span><br><span class="line">  name: String</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="template-6"><a href="#template-6" class="headerlink" title="template"></a>template</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;span&gt;</span><br><span class="line">    Welcom:&lt;span&gt;&#123;&#123; name | myFilter &#125;&#125;&lt;&#x2F;span&gt;</span><br><span class="line">  &lt;&#x2F;span&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="render：createElement"><a href="#render：createElement" class="headerlink" title="render：createElement"></a>render：createElement</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">render: function (h) &#123;</span><br><span class="line">  return h(&quot;span&quot;, [</span><br><span class="line">    &quot;Welcom:&quot;,</span><br><span class="line">    h(&quot;span&quot;, this.$options.filters.myFilter(this.name)),</span><br><span class="line">  ]);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="render：jsx-6"><a href="#render：jsx-6" class="headerlink" title="render：jsx"></a>render：jsx</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">render: function (h) &#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;span&gt;</span><br><span class="line">        Welcom:&lt;span&gt;&#123;this.$options.filters.myFilter(this.name)&#125;&lt;&#x2F;span&gt;</span><br><span class="line">      &lt;&#x2F;span&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>可见，在模版中使用管道<code>|</code>调用过滤器，在渲染函数中就变成了它本来的函数调用。</p>
+<h2 id="完整的实例"><a href="#完整的实例" class="headerlink" title="完整的实例"></a>完整的实例</h2><p><a href="https://codesandbox.io/s/vbindinrender-5z0yh" target="_blank" rel="noopener">基本渲染</a></p>
+<p><a href="https://codesandbox.io/s/vhtml-in-render-63c91" target="_blank" rel="noopener">v-html</a></p>
+<p><a href="https://codesandbox.io/s/vifinrender-wsf2l" target="_blank" rel="noopener">v-if</a></p>
+<p><a href="https://codesandbox.io/s/vmodel-in-render-np5kp" target="_blank" rel="noopener">v-model</a></p>
+<p><a href="https://codesandbox.io/s/vfor-in-render-qqnzu" target="_blank" rel="noopener">v-for</a></p>
+<p><a href="https://codesandbox.io/s/vslot-in-render-s9bmr" target="_blank" rel="noopener">v-slot</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/vue/" rel="tag"># vue</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/09/JavaScript%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%89%8B%E5%86%8C/" rel="prev" title="JavaScript正则表达式手册">
+      <i class="fa fa-chevron-left"></i> JavaScript正则表达式手册
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/26/%E8%BF%91%E6%9C%9F%E5%B0%9D%E9%B2%9C%E4%BD%93%E4%BC%9A/" rel="next" title="近期尝鲜体会">
+      近期尝鲜体会 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#做这个对比的意义"><span class="nav-number">1.</span> <span class="nav-text">做这个对比的意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#渲染基本数据"><span class="nav-number">2.</span> <span class="nav-text">渲染基本数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#template"><span class="nav-number">2.1.</span> <span class="nav-text">template</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render-jsx"><span class="nav-number">2.2.</span> <span class="nav-text">render:jsx</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#v-html"><span class="nav-number">3.</span> <span class="nav-text">v-html</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#template-1"><span class="nav-number">3.1.</span> <span class="nav-text">template</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render：crateElement"><span class="nav-number">3.2.</span> <span class="nav-text">render：crateElement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render：jsx"><span class="nav-number">3.3.</span> <span class="nav-text">render：jsx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#template-2"><span class="nav-number">3.4.</span> <span class="nav-text">template</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render：crateElement-1"><span class="nav-number">3.5.</span> <span class="nav-text">render：crateElement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render：jsx-1"><span class="nav-number">3.6.</span> <span class="nav-text">render：jsx</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#v-model"><span class="nav-number">4.</span> <span class="nav-text">v-model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#template-3"><span class="nav-number">4.1.</span> <span class="nav-text">template</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render：crateElement-2"><span class="nav-number">4.2.</span> <span class="nav-text">render：crateElement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render：jsx-2"><span class="nav-number">4.3.</span> <span class="nav-text">render：jsx</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#v-for"><span class="nav-number">5.</span> <span class="nav-text">v-for</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#template-4"><span class="nav-number">5.1.</span> <span class="nav-text">template</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render：crateElement-3"><span class="nav-number">5.2.</span> <span class="nav-text">render：crateElement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render：jsx-3"><span class="nav-number">5.3.</span> <span class="nav-text">render：jsx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#template-5"><span class="nav-number">5.4.</span> <span class="nav-text">template</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render：crateElement-4"><span class="nav-number">5.5.</span> <span class="nav-text">render：crateElement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render：jsx-4"><span class="nav-number">5.6.</span> <span class="nav-text">render：jsx</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#scoped-slot"><span class="nav-number">6.</span> <span class="nav-text">scoped slot</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#render：crateElement-5"><span class="nav-number">6.1.</span> <span class="nav-text">render：crateElement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render：jsx-5"><span class="nav-number">6.2.</span> <span class="nav-text">render：jsx</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#filter"><span class="nav-number">7.</span> <span class="nav-text">filter</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#template-6"><span class="nav-number">7.1.</span> <span class="nav-text">template</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render：createElement"><span class="nav-number">7.2.</span> <span class="nav-text">render：createElement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render：jsx-6"><span class="nav-number">7.3.</span> <span class="nav-text">render：jsx</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完整的实例"><span class="nav-number">8.</span> <span class="nav-text">完整的实例</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Vigo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vigo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
