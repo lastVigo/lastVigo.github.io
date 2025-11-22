@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lastvigo.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"right","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="如何用css设置背景？这里都有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="css如何设置background？">
+<meta property="og:url" content="https://lastvigo.github.io/posts/47469/index.html">
+<meta property="og:site_name" content="Vigo’s Blog">
+<meta property="og:description" content="如何用css设置背景？这里都有">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-01-08T08:05:44.000Z">
+<meta property="article:modified_time" content="2025-11-02T01:55:29.211Z">
+<meta property="article:author" content="Vigo">
+<meta property="article:tag" content="background">
+<meta property="article:tag" content="css">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://lastvigo.github.io/posts/47469/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://lastvigo.github.io/posts/47469/","path":"posts/47469/","title":"css如何设置background？"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>css如何设置background？ | Vigo’s Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Vigo’s Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%A8%E4%BB%80%E4%B9%88%E5%81%9A%E8%83%8C%E6%99%AF%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">用什么做背景？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E5%8C%BA%E5%9F%9F%E6%9C%89%E5%A4%9A%E5%A4%A7%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">背景区域有多大？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#demo"><span class="nav-number">2.1.</span> <span class="nav-text">demo</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87%E5%A6%82%E4%BD%95%E7%BC%A9%E6%94%BE%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">背景图片如何缩放？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#demo-1"><span class="nav-number">3.1.</span> <span class="nav-text">demo</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87%E6%98%AF%E5%90%A6%E9%87%8D%E5%A4%8D%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">背景图片是否重复？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#demo-2"><span class="nav-number">4.1.</span> <span class="nav-text">demo</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87%E5%AF%B9%E9%BD%90%E5%93%AA%E4%B8%AA%E8%BE%B9%E6%A1%86%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">背景图片对齐哪个边框？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#demo-3"><span class="nav-number">5.1.</span> <span class="nav-text">demo</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87%E5%A6%82%E4%BD%95%E5%AF%B9%E9%BD%90%EF%BC%9F"><span class="nav-number">6.</span> <span class="nav-text">背景图片如何对齐？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#demo-4"><span class="nav-number">6.1.</span> <span class="nav-text">demo</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87%E5%9B%BA%E5%AE%9A%E5%9C%A8%E5%93%AA%EF%BC%9F"><span class="nav-number">7.</span> <span class="nav-text">背景图片固定在哪？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#demo-5"><span class="nav-number">7.1.</span> <span class="nav-text">demo</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Vigo</p>
+  <div class="site-description" itemprop="description">Vigo的个人博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lastvigo.github.io/posts/47469/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Vigo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vigo’s Blog">
+      <meta itemprop="description" content="Vigo的个人博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="css如何设置background？ | Vigo’s Blog">
+      <meta itemprop="description" content="如何用css设置背景？这里都有">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          css如何设置background？
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-01-08 16:05:44" itemprop="dateCreated datePublished" datetime="2018-01-08T16:05:44+08:00">2018-01-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-11-02 09:55:29" itemprop="dateModified" datetime="2025-11-02T09:55:29+08:00">2025-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">如何用css设置背景？这里都有</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本文尽量避免涉及css语法，从问题入手解读背景设置。</p>
+<h1 id="用什么做背景？"><a href="#用什么做背景？" class="headerlink" title="用什么做背景？"></a>用什么做背景？</h1><p>设置<strong>color</strong>和<strong>image</strong></p>
+<ol>
+<li>可以设置纯色，也可以设置渐变色。</li>
+<li>先设置的背景图片处于z-index的正向上方（靠近用户）。</li>
+<li>贪心可以原谅，两者可以同时拥有。</li>
+</ol>
+<h1 id="背景区域有多大？"><a href="#背景区域有多大？" class="headerlink" title="背景区域有多大？"></a>背景区域有多大？</h1><p>设置<strong>clip</strong>,对图片和颜色都有效。</p>
+<ol>
+<li>和边框一般大：<strong>border-box（默认值）</strong></li>
+<li>和内填充一般大：<strong>padding-box</strong></li>
+<li>和内容一般大：<strong>content-box</strong></li>
+<li>和内容中文字一般大：<strong>text</strong></li>
+</ol>
+<p>文字镂空效果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">background-clip: text;</span><br><span class="line">-webkit-background-clip: text;</span><br><span class="line">color: transparent; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="demo"><a href="#demo" class="headerlink" title="demo"></a>demo</h2>
+<iframe height='265' scrolling='no' title='background-clip-demo' src='//codepen.io/lastVigo/embed/XVZodJ/?height=265&theme-id=0&default-tab=result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a target="_blank" rel="noopener" href='https://codepen.io/lastVigo/pen/XVZodJ/'>background-clip-demo</a> by Vigo (<a target="_blank" rel="noopener" href='https://codepen.io/lastVigo'>@lastVigo</a>) on <a target="_blank" rel="noopener" href='https://codepen.io'>CodePen</a>.
+</iframe>
+
+
+<h1 id="背景图片如何缩放？"><a href="#背景图片如何缩放？" class="headerlink" title="背景图片如何缩放？"></a>背景图片如何缩放？</h1><p>设置<strong>size</strong>。</p>
+<ol>
+<li>等比例缩放，用背景图片的内容覆盖整个背景区域：<strong>cover</strong>（比例不失真，但可能显示不全）</li>
+<li>在背景区域内完整显示背景图片：<strong>contain</strong></li>
+<li>水平和垂直方向缩放：<br><strong>数值</strong>：对应方向缩放到数值的尺寸<br><strong>百分比</strong>：<strong>相对背景区域</strong>的缩放百分比<br><strong>auto</strong>：跟随另外一边等比例缩放。</li>
+</ol>
+<p>说明：</p>
+<ul>
+<li>任意一个方向采用auto，图片比例不会失真。</li>
+<li><code>auto</code> 等价于 <code>auto auto</code>，表示采用背景图片的原始尺寸，这也是默认值。</li>
+</ul>
+<h2 id="demo-1"><a href="#demo-1" class="headerlink" title="demo"></a>demo</h2>
+<iframe height='265' scrolling='no' title='background-size-demo' src='//codepen.io/lastVigo/embed/xpYemd/?height=265&theme-id=0&default-tab=result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a target="_blank" rel="noopener" href='https://codepen.io/lastVigo/pen/xpYemd/'>background-size-demo</a> by Vigo (<a target="_blank" rel="noopener" href='https://codepen.io/lastVigo'>@lastVigo</a>) on <a target="_blank" rel="noopener" href='https://codepen.io'>CodePen</a>.
+</iframe>
+
+<h1 id="背景图片是否重复？"><a href="#背景图片是否重复？" class="headerlink" title="背景图片是否重复？"></a>背景图片是否重复？</h1><p>设置<strong>repeat</strong>。<br>水平垂直两个方向上设置：</p>
+<ol>
+<li>重复，裁切最后一个超出的图片：<strong>repeat</strong>。</li>
+<li>不重复：no-repeat。</li>
+<li>重复，不裁切不缩放，必要时填充空白：<strong>space</strong>。</li>
+<li>重复，不裁切但会缩放：<strong>round</strong>。</li>
+</ol>
+<p>说明：</p>
+<ul>
+<li>在背景图片非常大时，设置space，背景图片也会被裁切。</li>
+</ul>
+<h2 id="demo-2"><a href="#demo-2" class="headerlink" title="demo"></a>demo</h2>
+<iframe height='265' scrolling='no' title='background-repeat-demo' src='//codepen.io/lastVigo/embed/mpxyZG/?height=265&theme-id=0&default-tab=result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a target="_blank" rel="noopener" href='https://codepen.io/lastVigo/pen/mpxyZG/'>background-repeat-demo</a> by Vigo (<a target="_blank" rel="noopener" href='https://codepen.io/lastVigo'>@lastVigo</a>) on <a target="_blank" rel="noopener" href='https://codepen.io'>CodePen</a>.
+</iframe>
+
+
+<h1 id="背景图片对齐哪个边框？"><a href="#背景图片对齐哪个边框？" class="headerlink" title="背景图片对齐哪个边框？"></a>背景图片对齐哪个边框？</h1><p>设置<strong>origin</strong>。</p>
+<ol>
+<li>对齐边框：border-box（默认值）</li>
+<li>对齐内填充：padding-box</li>
+<li>对齐内容：content-box</li>
+</ol>
+<h2 id="demo-3"><a href="#demo-3" class="headerlink" title="demo"></a>demo</h2>
+<iframe height='265' scrolling='no' title='background-origin-demo' src='//codepen.io/lastVigo/embed/KZQELr/?height=265&theme-id=0&default-tab=result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a target="_blank" rel="noopener" href='https://codepen.io/lastVigo/pen/KZQELr/'>background-origin-demo</a> by Vigo (<a target="_blank" rel="noopener" href='https://codepen.io/lastVigo'>@lastVigo</a>) on <a target="_blank" rel="noopener" href='https://codepen.io'>CodePen</a>.
+</iframe>
+
+
+<h1 id="背景图片如何对齐？"><a href="#背景图片如何对齐？" class="headerlink" title="背景图片如何对齐？"></a>背景图片如何对齐？</h1><p>设置<strong>position</strong>，控制相对于对齐边框的偏移。</p>
+<p>可以设置水平和垂直方向上偏移的数值、百分比或者位置。</p>
+<p>具体有以下三种途径：</p>
+<ol>
+<li>两个百分比在背景图片（缩放后的）和背景边框上能够分别确定两个点，按照这两个点对齐：<strong>percent% percent%</strong></li>
+<li>以背景图片和背景边框左上角相对位置对齐：<strong>数字（单位） 数字（单位）</strong></li>
+<li>以上下左右四条边+经过中线点于边垂直的两条直线对齐：<strong>一对儿方位词汇组合</strong></li>
+</ol>
+<p>说明：</p>
+<ul>
+<li>1和3是一种对齐方式，3是1的一种特例。</li>
+<li>1中左侧、上方是0%，向右、向下数值增加。例：<code>50% 50%</code> ，就是以背景图片和背景内容边框的中线点重叠对齐，50%是水平和垂直居中的两条线，他们的交叉点是中心点。</li>
+<li>2中左上角为：0 0，向右、向下数值增加。例：<code>10px 10px</code>，背景图片左上角相对边框左上角水平垂直方向上都偏移10px。</li>
+<li>3中左侧边线：<strong>left</strong>；右侧边线：<strong>right</strong>；垂直通过中心点的线：<strong>center</strong>；上方边线：<strong>top</strong>；下方边线：<strong>bottom</strong>；水平通过中线点的线：<strong>center</strong>。例：right bottom，就是两者右侧和下方的边线贴合对齐，也就是两者的右下角对齐。</li>
+<li>只写一个数字或者百分比，则两个方向都用这个值。例如：<code>50%</code> 等价于 <code>50% 50%</code>。</li>
+</ul>
+<h2 id="demo-4"><a href="#demo-4" class="headerlink" title="demo"></a>demo</h2>
+<iframe height='265' scrolling='no' title='background-position-demo' src='//codepen.io/lastVigo/embed/vpREXJ/?height=265&theme-id=0&default-tab=result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a target="_blank" rel="noopener" href='https://codepen.io/lastVigo/pen/vpREXJ/'>background-position-demo</a> by Vigo (<a target="_blank" rel="noopener" href='https://codepen.io/lastVigo'>@lastVigo</a>) on <a target="_blank" rel="noopener" href='https://codepen.io'>CodePen</a>.
+</iframe>
+
+
+<h1 id="背景图片固定在哪？"><a href="#背景图片固定在哪？" class="headerlink" title="背景图片固定在哪？"></a>背景图片固定在哪？</h1><p>设置attachment。</p>
+<ol>
+<li>固定在容器的边框上：<strong>scroll</strong>（默认值）</li>
+<li>固定在网页上：<strong>fixed</strong></li>
+<li>固定在内容上：<strong>local</strong></li>
+</ol>
+<p>说明：</p>
+<ul>
+<li>固定在内容上，边框下的背景会自动不显示。</li>
+</ul>
+<h2 id="demo-5"><a href="#demo-5" class="headerlink" title="demo"></a>demo</h2>
+<iframe height='265' scrolling='no' title='background-attachment-demo' src='//codepen.io/lastVigo/embed/QaQPLZ/?height=265&theme-id=0&default-tab=result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a target="_blank" rel="noopener" href='https://codepen.io/lastVigo/pen/QaQPLZ/'>background-attachment-demo</a> by Vigo (<a target="_blank" rel="noopener" href='https://codepen.io/lastVigo'>@lastVigo</a>) on <a target="_blank" rel="noopener" href='https://codepen.io'>CodePen</a>.
+</iframe>
+
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Vigo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://lastvigo.github.io/posts/47469/" title="css如何设置background？">https://lastvigo.github.io/posts/47469/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/css/" rel="tag"># css</a>
+              <a href="/tags/background/" rel="tag"># background</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/61927/" rel="prev" title="sass、scss、less扫盲">
+                  <i class="fa fa-angle-left"></i> sass、scss、less扫盲
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/45238/" rel="next" title="发布异常引发的思考：npm组件如何升级">
+                  发布异常引发的思考：npm组件如何升级 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vigo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">45k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:44</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"lastVigo/lastVigo.github.io","issue_term":"pathname","theme":"github-dark"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

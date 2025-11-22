@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lastvigo.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"right","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="字符编码，常用字符编码规范，汉语部分：GB232，GBK以及GB18030">
+<meta property="og:type" content="article">
+<meta property="og:title" content="字符编码笔记（二）">
+<meta property="og:url" content="https://lastvigo.github.io/posts/50627/index.html">
+<meta property="og:site_name" content="Vigo’s Blog">
+<meta property="og:description" content="字符编码，常用字符编码规范，汉语部分：GB232，GBK以及GB18030">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-01T23:56:36.000Z">
+<meta property="article:modified_time" content="2025-11-02T01:55:29.250Z">
+<meta property="article:author" content="Vigo">
+<meta property="article:tag" content="字符编码">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://lastvigo.github.io/posts/50627/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://lastvigo.github.io/posts/50627/","path":"posts/50627/","title":"字符编码笔记（二）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>字符编码笔记（二） | Vigo’s Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Vigo’s Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GB2312"><span class="nav-number">1.</span> <span class="nav-text">GB2312</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BA%E4%BD%8D%E7%A0%81"><span class="nav-number">1.1.</span> <span class="nav-text">区位码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BD%E6%A0%87%E7%A0%81"><span class="nav-number">1.2.</span> <span class="nav-text">国标码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E7%A0%81"><span class="nav-number">1.3.</span> <span class="nav-text">机器码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GB2312%E6%9C%BA%E5%99%A8%E7%A0%81%E7%A0%81%E4%BD%8D"><span class="nav-number">1.3.1.</span> <span class="nav-text">GB2312机器码码位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GB2312%E6%9C%BA%E5%99%A8%E7%A0%81%E4%B8%AD%E6%B1%89%E5%AD%97%E7%A0%81%E4%BD%8D"><span class="nav-number">1.3.2.</span> <span class="nav-text">GB2312机器码中汉字码位</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E7%82%B9"><span class="nav-number">1.4.</span> <span class="nav-text">特点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GBK"><span class="nav-number">2.</span> <span class="nav-text">GBK</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E7%82%B9-1"><span class="nav-number">2.1.</span> <span class="nav-text">特点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GB18030"><span class="nav-number">3.</span> <span class="nav-text">GB18030</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%96%91%E9%97%AE"><span class="nav-number">4.</span> <span class="nav-text">疑问</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Vigo</p>
+  <div class="site-description" itemprop="description">Vigo的个人博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lastvigo.github.io/posts/50627/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Vigo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vigo’s Blog">
+      <meta itemprop="description" content="Vigo的个人博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="字符编码笔记（二） | Vigo’s Blog">
+      <meta itemprop="description" content="字符编码，常用字符编码规范，汉语部分：GB232，GBK以及GB18030">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          字符编码笔记（二）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-12-02 07:56:36" itemprop="dateCreated datePublished" datetime="2020-12-02T07:56:36+08:00">2020-12-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-11-02 09:55:29" itemprop="dateModified" datetime="2025-11-02T09:55:29+08:00">2025-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>868</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">字符编码，常用字符编码规范，汉语部分：GB232，GBK以及GB18030</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>东亚非拼写文字的编码面临的共同问题是字符数量非常大。</p>
+<h2 id="GB2312"><a href="#GB2312" class="headerlink" title="GB2312"></a>GB2312</h2><p>全称是GB2312-1980，中国大陆第一个汉字编码标准。采用两个字节表示一个汉字或者符号，涵盖了绝大多数的常用汉字6千余。</p>
+<p>因为确定要收录的字符数量比较多，所以对其进行了分区，总共分了94个分区（从1区开始），每个分区有94个位。10-15区和88-94区空闲。</p>
+<p>汉字的范围在16区～87区。</p>
+<h3 id="区位码"><a href="#区位码" class="headerlink" title="区位码"></a>区位码</h3><p>区位码是GB2312规范中的编码字符集。</p>
+<p>GB2312的区代码范围是：[1,9]和[16,88]，位代码范围是：[1,94]。</p>
+<p>举例说明：汉字“啊”在第16码区第1位，所以它的区位码应该是：1601</p>
+<h3 id="国标码"><a href="#国标码" class="headerlink" title="国标码"></a>国标码</h3><p>国标码是GB2312规范中的字符编码表。<br>区域码的两个字节码位，统一都向后偏移32个码位，就能兼容ASCII码（就是能使用ASCII前32个码位的控制符号了），这就是国标码。所以国标码就是一个GB232字符的区码和位码分别加上32（十六进制是0x20）再组合在一块。GB2312规范只规定了国标码，也就是只规定到了编码阶段。</p>
+<p>国标码可以用来传递信息了，但是如果把国标码存储到文件中，是无法和ASCII码区分的。</p>
+<p>我们来说一下为什么二者的字节内容无法区分。</p>
+<p>前面说了区位码存在94个区，每个区有94个位，转为国标码后，两个字节各自对应的数字都小于128，所以和ASCII没办法区分。</p>
+<h3 id="机器码"><a href="#机器码" class="headerlink" title="机器码"></a>机器码</h3><p>因为国标码无法存储到文件中，所以出现了机器码。</p>
+<p>为了在文件中区分GB2312字符的字节，统一把国际码的两个字节高位标记为1，实际效果就是加了128（十六进制是0x80）。</p>
+<p>由此可知，区位码的区字节和位字节分别加上160（32+128，十六进制的0xA0）得到的2字节序列就是机器码。</p>
+<h4 id="GB2312机器码码位"><a href="#GB2312机器码码位" class="headerlink" title="GB2312机器码码位"></a>GB2312机器码码位</h4><table>
+<thead>
+<tr>
+<th></th>
+<th>码位起</th>
+<th>码位止</th>
+<th>内容</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>高位</td>
+<td>0xA1(0b1010 0001)</td>
+<td>0xF7(0b1111 0111)</td>
+<td>所在区代码</td>
+<td>0xA0加上1～87</td>
+</tr>
+<tr>
+<td>低位</td>
+<td>0xA1(0b1010 0001)</td>
+<td>0xFE(0b1111 1110)</td>
+<td>所在位代码</td>
+<td>0xA0加上1～94</td>
+</tr>
+</tbody></table>
+<h4 id="GB2312机器码中汉字码位"><a href="#GB2312机器码中汉字码位" class="headerlink" title="GB2312机器码中汉字码位"></a>GB2312机器码中汉字码位</h4><table>
+<thead>
+<tr>
+<th></th>
+<th>码位起</th>
+<th>码位止</th>
+<th>内容</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>高位</td>
+<td>0xB0(0b1011 0000)</td>
+<td>0xF7(0b1111 0111)</td>
+<td>所在区代码</td>
+<td>0xA0加上16～87</td>
+</tr>
+<tr>
+<td>低位</td>
+<td>0xA1(0b1010 0001)</td>
+<td>0xFE(0b1111 1110)</td>
+<td>所在位代码</td>
+<td>0xA0加上1～94</td>
+</tr>
+</tbody></table>
+<p>PS：其中有5个空位是D7FA-D7FE，55区90～94位。</p>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ul>
+<li>码位不连续</li>
+<li>双字节</li>
+<li>字节最高位都为1</li>
+</ul>
+<h2 id="GBK"><a href="#GBK" class="headerlink" title="GBK"></a>GBK</h2><p>GBK兼容扩展了GB2312，这是一个过渡标准，非国家标准。</p>
+<p>GBK扩充了字符表，收录了2万余字符，为了多存储字符，打破了双字节最高位都是1的限制。</p>
+<h3 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h3><ul>
+<li>双字节</li>
+<li>首字节最高位为1，末字节无此限制</li>
+<li>兼容GB2312</li>
+</ul>
+<h2 id="GB18030"><a href="#GB18030" class="headerlink" title="GB18030"></a>GB18030</h2><p>采用变长编码，存在单字节、2字节、4字节三种方式对字符进行编码，码位更加复杂。兼容GB2312，基本兼容GBK，支持Unicode相关所有码位，公收录汉字7万余。<br>可以理解为Unicode的变种。</p>
+<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><ul>
+<li>GB2312国标码存在的意义是什么？</li>
+<li>GB18030和Unicode的具体关系如何？</li>
+<li>国家标准要求强制执行，如何体现？</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Vigo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://lastvigo.github.io/posts/50627/" title="字符编码笔记（二）">https://lastvigo.github.io/posts/50627/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81/" rel="tag"># 字符编码</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/21945/" rel="prev" title="字符编码笔记（一）">
+                  <i class="fa fa-angle-left"></i> 字符编码笔记（一）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/51642/" rel="next" title="字符编码笔记（三）">
+                  字符编码笔记（三） <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vigo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">45k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:44</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"lastVigo/lastVigo.github.io","issue_term":"pathname","theme":"github-dark"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

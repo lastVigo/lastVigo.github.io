@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"lastvigo.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"right","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="用json schema 检查发送和请求的数据格式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="乱炖fetch、json_Schema">
+<meta property="og:url" content="https://lastvigo.github.io/posts/29205/index.html">
+<meta property="og:site_name" content="Vigo’s Blog">
+<meta property="og:description" content="用json schema 检查发送和请求的数据格式">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-01-14T00:47:24.000Z">
+<meta property="article:modified_time" content="2025-11-02T01:55:29.223Z">
+<meta property="article:author" content="Vigo">
+<meta property="article:tag" content="Json">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://lastvigo.github.io/posts/29205/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://lastvigo.github.io/posts/29205/","path":"posts/29205/","title":"乱炖fetch、json_Schema"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>乱炖fetch、json_Schema | Vigo’s Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Vigo’s Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#json-schema"><span class="nav-number">2.</span> <span class="nav-text">json schema</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90json-schema%E6%95%B0%E6%8D%AE"><span class="nav-number">2.1.</span> <span class="nav-text">生成json schema数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%A1%E9%AA%8C%E6%8E%A5%E5%8F%A3%E6%95%B0%E6%8D%AE"><span class="nav-number">2.2.</span> <span class="nav-text">校验接口数据</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#fetch"><span class="nav-number">3.</span> <span class="nav-text">fetch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Vigo</p>
+  <div class="site-description" itemprop="description">Vigo的个人博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lastvigo.github.io/posts/29205/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Vigo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vigo’s Blog">
+      <meta itemprop="description" content="Vigo的个人博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="乱炖fetch、json_Schema | Vigo’s Blog">
+      <meta itemprop="description" content="用json schema 检查发送和请求的数据格式">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          乱炖fetch、json_Schema
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-01-14 08:47:24" itemprop="dateCreated datePublished" datetime="2019-01-14T08:47:24+08:00">2019-01-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-11-02 09:55:29" itemprop="dateModified" datetime="2025-11-02T09:55:29+08:00">2025-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">用json schema 检查发送和请求的数据格式</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>既有项目，前端以jQuery为主。和后端的接口做了调整，需要前端对接。</p>
+<p>接口数据以json格式定义，非常复杂，手工检查起来非常耗费精力和时间。所以寻求解决方案。</p>
+<h1 id="json-schema"><a href="#json-schema" class="headerlink" title="json schema"></a>json schema</h1><p>先找到了<a target="_blank" rel="noopener" href="https://json-schema.org/">json schema</a>。简单来说它可以约束json数据格式，这里正好可以规范接口数据格式。声称的可以和前端UI发生关联看起来挺美好，没有进一步研究。</p>
+<p>它只是一套规范，针对各种编程语言有不同的实现。另外它还有不同的版本，不同版本之间目测差距还很大，需要注意。</p>
+<h2 id="生成json-schema数据"><a href="#生成json-schema数据" class="headerlink" title="生成json schema数据"></a>生成json schema数据</h2><p>首先，json schema数据也是json格式。</p>
+<p>当然可以手写json schema，但是针对复杂的数据格式，这不太现实。<br>好在虽然没有接口规范文档，但是有一份接口示例数据，<a target="_blank" rel="noopener" href="https://www.jsonschema.net/">这里</a>提供了根据json数据生成json schema规范文件的功能。这么做之前，你需要确保示例json数据符合json语法。这个工具不提供json语法检查。<a target="_blank" rel="noopener" href="https://www.liquid-technologies.com/online-json-to-schema-converter">另外一个在线工具</a>可以提供json语法检查。两者生成的规范版本不同，高版本的比低版本的内容会多很多。</p>
+<h2 id="校验接口数据"><a href="#校验接口数据" class="headerlink" title="校验接口数据"></a>校验接口数据</h2><p><a target="_blank" rel="noopener" href="http://json-schema.org/implementations.html">这里</a>有json schema的各种语言实现版本，javascript语言实现了校验功能的有<a target="_blank" rel="noopener" href="https://github.com/epoberezkin/ajv">ajv</a>、<a target="_blank" rel="noopener" href="https://github.com/korzio/djv">djv</a>以及<a target="_blank" rel="noopener" href="https://github.com/mokkabonna/vue-vuelidate-jsonschema">vue-vuelidate-jsonschema</a> 。因为项目不是纯vue，所以没有尝试后者，再因为既有框架给予requirejs，尝试发现avj可行，就用了它。</p>
+<p>查看avj的文档，使用方法大致如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var Ajv = require(&#x27;ajv&#x27;);</span><br><span class="line">var ajv = new Ajv(); // options can be passed, e.g. &#123;allErrors: true&#125;</span><br><span class="line">var validate = ajv.compile(schema);</span><br><span class="line">var valid = validate(data);</span><br><span class="line">if (!valid) console.log(validate.errors);</span><br></pre></td></tr></table></figure>
+<p>其中，<code>schema</code>就是一个json内容，也就是前面生成的json schema内容。很明显，这里需要把生成的内容加载进来，才能够实现校验。</p>
+<p>在发送json数据时加载对应的数据格式文件，通过ajv校验发送的数据格式。</p>
+<p>在得到数据后，加载相应的数据格式文件，同样通过ajv校验得到的数据格式。</p>
+<p>以上就是校验接口数据的思路。</p>
+<h1 id="fetch"><a href="#fetch" class="headerlink" title="fetch"></a>fetch</h1><p>fetch用的不多，先前用jQuery的ajax不觉得什么，但对比axios，在处理多个请求的时候真的很痛苦。这次碰到的问题很明显就是这样的，做一次请求，前后需要加载两次json文件。项目实际的情况不需要考虑老旧浏览器的兼容问题，同时也没有必要为了这一处改造单独引入axios，所以就用原生支持的fetch吧。</p>
+<p>说起fetch，不得不提到Promise，个人觉得很难用三言两语把它说清楚，但尝试过后你会有很深刻的理解。在服务器端，它的用途更广。在这里姑且简单的理解它是一个存放一步操作结果的容器吧。fetch操作后，得到的就是这样一个容器。ES6语法层面有进一步操作这些单独容器的支持，这里不做进一步的说明了。详情可以移步<a target="_blank" rel="noopener" href="http://es6.ruanyifeng.com/#docs/promise">ECMAScript 6 入门</a>仔细研究。下面是具体实现的代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">let doSomeThing = fetch(BASE_PATH + &#x27;/dosomething&#x27;, fetchInit)</span><br><span class="line">              .then(resp =&gt; resp.json());</span><br><span class="line">let getSendConfig = fetch(&#x27;../pathA/config.json?r=&#x27; + Math.random() * 100)</span><br><span class="line">              .then(resp =&gt; resp.json());</span><br><span class="line">let getGetConfig = fetch(&#x27;../pathB/config.json?r=&#x27; + Math.random() * 100)</span><br><span class="line">              .then(resp =&gt; resp.json());</span><br></pre></td></tr></table></figure>
+<p>代码中的<code>fetchInit</code>是一个对象，通过它对发送数据请求做了设置，比如请求的数据、格式等。</p>
+<p>前面说过fetch返回的是一个promise对象，<code>.then</code>语句操作的是这个promise对象，同时它返回的仍然是一个promise对象。我们可以一直执行需要的后续步骤。</p>
+<p>以上三条语句，执行了网络请求，后续操作都进一步把结果处理成了json格式。需要说明，上面三条语句是异步操作，发起请求的顺序和得到反馈的顺序无法做到一致。下面要从三个Promise对象中获取结果了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">let param=...// 发送的json数据</span><br><span class="line">...</span><br><span class="line">let allPromise = Promise.all([doSomeThingResult, sendConfig, getConfig])</span><br><span class="line">              .then(function ([resultJson, sendConfigJson, getConfigJson]) &#123;</span><br><span class="line">              let ajv = new Ajv();</span><br><span class="line">              let validate = ajv.compile(sendConfigJson);//指定校验配置</span><br><span class="line">              let valid = validate(param);// 校验发送数据</span><br><span class="line">              if (valid) &#123;</span><br><span class="line">              	console.log(&#x27;发送数据校验没有异常!&#x27;);</span><br><span class="line">              &#125;</span><br><span class="line">              else &#123;</span><br><span class="line">              	console.error(&#x27;发送数据校验发现异常: &#x27; + ajv.errorsText(validate.errors));</span><br><span class="line">              &#125;</span><br><span class="line">                </span><br><span class="line">              let validate2 = ajv.compile(getConfigJson);//指定校验配置</span><br><span class="line">              let valid2 = validate2(resultJson);// 校验返回数据</span><br><span class="line">              if (valid2)&#123;</span><br><span class="line">              	console.log(&#x27;返回数据校验没有异常!&#x27;);</span><br><span class="line">              &#125;</span><br><span class="line">              else&#123;</span><br><span class="line">               console.error(&#x27;返回数据校验发现异常: &#x27; + ajv.errorsText(validate2.errors));</span><br><span class="line">              &#125; </span><br><span class="line">                </span><br><span class="line">              ...// 执行正常的业务逻辑</span><br><span class="line">              &#125;)</span><br><span class="line">              .catch((resp) =&gt; &#123;</span><br><span class="line">                // 提示出错</span><br><span class="line">              &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这里，Promise.all等待前面三个请求都有了结果后才执行后续步骤，任何的请求错误都会在末尾的<code>catch</code>中执行，<code>then</code>中的方法实现了上述的校验思路，这里不再重复了。</p>
+<p>以上写法的执行一次只能查到一处数据格式的问题，所以校验完整的数据格式，可能需要多次尝试。没有进一步研究ajv是否支持一次检查出所有格式问题。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch">使用 Fetch</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Vigo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://lastvigo.github.io/posts/29205/" title="乱炖fetch、json_Schema">https://lastvigo.github.io/posts/29205/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Vue/" rel="tag"># Vue</a>
+              <a href="/tags/Json/" rel="tag"># Json</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/13710/" rel="prev" title="说说Vue的插槽">
+                  <i class="fa fa-angle-left"></i> 说说Vue的插槽
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/64039/" rel="next" title="微信小程序系列（一）">
+                  微信小程序系列（一） <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vigo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">45k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:44</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"lastVigo/lastVigo.github.io","issue_term":"pathname","theme":"github-dark"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

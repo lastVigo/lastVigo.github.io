@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Allow: /archives/
+Allow: /categories/
+Allow: /tags/
+Disallow: /css/
+Disallow: /draf/
+Disallow: /js/
+Sitemap: https://lastvigo.github.io/sitemap.xml
